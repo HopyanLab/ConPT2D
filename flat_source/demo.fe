@@ -1,0 +1,1349 @@
+// Periodic Voronoi Tesselation
+
+STRING
+SURFACE_DIMENSION 1
+SPACE_DIMENSION   2
+TORUS
+
+PARAMETER p0_shape_index = 4.00
+PARAMETER r_peri_modulus = 1.000
+PARAMETER length_threshold = 0.100000000
+PARAMETER energy_threshold = 0.000000010
+
+QUANTITY fixed_edge INFO_ONLY METHOD edge_length
+
+METHOD_INSTANCE cell_1_peri METHOD edge_length
+METHOD_INSTANCE cell_1_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_1_area_neg METHOD edge_torus_area
+PARAMETER cell_1_corr = 0
+QUANTITY cell_1_energy ENERGY FUNCTION
+	(cell_1_area_pos.value - cell_1_area_neg.value + cell_1_corr - 1)^2 +
+	(cell_1_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_2_peri METHOD edge_length
+METHOD_INSTANCE cell_2_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_2_area_neg METHOD edge_torus_area
+PARAMETER cell_2_corr = 0
+QUANTITY cell_2_energy ENERGY FUNCTION
+	(cell_2_area_pos.value - cell_2_area_neg.value + cell_2_corr - 1)^2 +
+	(cell_2_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_3_peri METHOD edge_length
+METHOD_INSTANCE cell_3_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_3_area_neg METHOD edge_torus_area
+PARAMETER cell_3_corr = 0
+QUANTITY cell_3_energy ENERGY FUNCTION
+	(cell_3_area_pos.value - cell_3_area_neg.value + cell_3_corr - 1)^2 +
+	(cell_3_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_4_peri METHOD edge_length
+METHOD_INSTANCE cell_4_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_4_area_neg METHOD edge_torus_area
+PARAMETER cell_4_corr = 0
+QUANTITY cell_4_energy ENERGY FUNCTION
+	(cell_4_area_pos.value - cell_4_area_neg.value + cell_4_corr - 1)^2 +
+	(cell_4_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_5_peri METHOD edge_length
+METHOD_INSTANCE cell_5_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_5_area_neg METHOD edge_torus_area
+PARAMETER cell_5_corr = 0
+QUANTITY cell_5_energy ENERGY FUNCTION
+	(cell_5_area_pos.value - cell_5_area_neg.value + cell_5_corr - 1)^2 +
+	(cell_5_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_6_peri METHOD edge_length
+METHOD_INSTANCE cell_6_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_6_area_neg METHOD edge_torus_area
+PARAMETER cell_6_corr = 0
+QUANTITY cell_6_energy ENERGY FUNCTION
+	(cell_6_area_pos.value - cell_6_area_neg.value + cell_6_corr - 1)^2 +
+	(cell_6_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_7_peri METHOD edge_length
+METHOD_INSTANCE cell_7_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_7_area_neg METHOD edge_torus_area
+PARAMETER cell_7_corr = 0
+QUANTITY cell_7_energy ENERGY FUNCTION
+	(cell_7_area_pos.value - cell_7_area_neg.value + cell_7_corr - 1)^2 +
+	(cell_7_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_8_peri METHOD edge_length
+METHOD_INSTANCE cell_8_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_8_area_neg METHOD edge_torus_area
+PARAMETER cell_8_corr = 0
+QUANTITY cell_8_energy ENERGY FUNCTION
+	(cell_8_area_pos.value - cell_8_area_neg.value + cell_8_corr - 1)^2 +
+	(cell_8_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_9_peri METHOD edge_length
+METHOD_INSTANCE cell_9_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_9_area_neg METHOD edge_torus_area
+PARAMETER cell_9_corr = 0
+QUANTITY cell_9_energy ENERGY FUNCTION
+	(cell_9_area_pos.value - cell_9_area_neg.value + cell_9_corr - 1)^2 +
+	(cell_9_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_10_peri METHOD edge_length
+METHOD_INSTANCE cell_10_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_10_area_neg METHOD edge_torus_area
+PARAMETER cell_10_corr = 0
+QUANTITY cell_10_energy ENERGY FUNCTION
+	(cell_10_area_pos.value - cell_10_area_neg.value + cell_10_corr - 1)^2 +
+	(cell_10_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_11_peri METHOD edge_length
+METHOD_INSTANCE cell_11_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_11_area_neg METHOD edge_torus_area
+PARAMETER cell_11_corr = 0
+QUANTITY cell_11_energy ENERGY FUNCTION
+	(cell_11_area_pos.value - cell_11_area_neg.value + cell_11_corr - 1)^2 +
+	(cell_11_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_12_peri METHOD edge_length
+METHOD_INSTANCE cell_12_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_12_area_neg METHOD edge_torus_area
+PARAMETER cell_12_corr = 0
+QUANTITY cell_12_energy ENERGY FUNCTION
+	(cell_12_area_pos.value - cell_12_area_neg.value + cell_12_corr - 1)^2 +
+	(cell_12_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_13_peri METHOD edge_length
+METHOD_INSTANCE cell_13_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_13_area_neg METHOD edge_torus_area
+PARAMETER cell_13_corr = 0
+QUANTITY cell_13_energy ENERGY FUNCTION
+	(cell_13_area_pos.value - cell_13_area_neg.value + cell_13_corr - 1)^2 +
+	(cell_13_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_14_peri METHOD edge_length
+METHOD_INSTANCE cell_14_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_14_area_neg METHOD edge_torus_area
+PARAMETER cell_14_corr = 0
+QUANTITY cell_14_energy ENERGY FUNCTION
+	(cell_14_area_pos.value - cell_14_area_neg.value + cell_14_corr - 1)^2 +
+	(cell_14_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_15_peri METHOD edge_length
+METHOD_INSTANCE cell_15_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_15_area_neg METHOD edge_torus_area
+PARAMETER cell_15_corr = 0
+QUANTITY cell_15_energy ENERGY FUNCTION
+	(cell_15_area_pos.value - cell_15_area_neg.value + cell_15_corr - 1)^2 +
+	(cell_15_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_16_peri METHOD edge_length
+METHOD_INSTANCE cell_16_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_16_area_neg METHOD edge_torus_area
+PARAMETER cell_16_corr = 0
+QUANTITY cell_16_energy ENERGY FUNCTION
+	(cell_16_area_pos.value - cell_16_area_neg.value + cell_16_corr - 1)^2 +
+	(cell_16_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_17_peri METHOD edge_length
+METHOD_INSTANCE cell_17_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_17_area_neg METHOD edge_torus_area
+PARAMETER cell_17_corr = 0
+QUANTITY cell_17_energy ENERGY FUNCTION
+	(cell_17_area_pos.value - cell_17_area_neg.value + cell_17_corr - 1)^2 +
+	(cell_17_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_18_peri METHOD edge_length
+METHOD_INSTANCE cell_18_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_18_area_neg METHOD edge_torus_area
+PARAMETER cell_18_corr = 0
+QUANTITY cell_18_energy ENERGY FUNCTION
+	(cell_18_area_pos.value - cell_18_area_neg.value + cell_18_corr - 1)^2 +
+	(cell_18_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_19_peri METHOD edge_length
+METHOD_INSTANCE cell_19_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_19_area_neg METHOD edge_torus_area
+PARAMETER cell_19_corr = 0
+QUANTITY cell_19_energy ENERGY FUNCTION
+	(cell_19_area_pos.value - cell_19_area_neg.value + cell_19_corr - 1)^2 +
+	(cell_19_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_20_peri METHOD edge_length
+METHOD_INSTANCE cell_20_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_20_area_neg METHOD edge_torus_area
+PARAMETER cell_20_corr = 0
+QUANTITY cell_20_energy ENERGY FUNCTION
+	(cell_20_area_pos.value - cell_20_area_neg.value + cell_20_corr - 1)^2 +
+	(cell_20_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_21_peri METHOD edge_length
+METHOD_INSTANCE cell_21_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_21_area_neg METHOD edge_torus_area
+PARAMETER cell_21_corr = 0
+QUANTITY cell_21_energy ENERGY FUNCTION
+	(cell_21_area_pos.value - cell_21_area_neg.value + cell_21_corr - 1)^2 +
+	(cell_21_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_22_peri METHOD edge_length
+METHOD_INSTANCE cell_22_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_22_area_neg METHOD edge_torus_area
+PARAMETER cell_22_corr = 0
+QUANTITY cell_22_energy ENERGY FUNCTION
+	(cell_22_area_pos.value - cell_22_area_neg.value + cell_22_corr - 1)^2 +
+	(cell_22_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_23_peri METHOD edge_length
+METHOD_INSTANCE cell_23_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_23_area_neg METHOD edge_torus_area
+PARAMETER cell_23_corr = 0
+QUANTITY cell_23_energy ENERGY FUNCTION
+	(cell_23_area_pos.value - cell_23_area_neg.value + cell_23_corr - 1)^2 +
+	(cell_23_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_24_peri METHOD edge_length
+METHOD_INSTANCE cell_24_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_24_area_neg METHOD edge_torus_area
+PARAMETER cell_24_corr = 0
+QUANTITY cell_24_energy ENERGY FUNCTION
+	(cell_24_area_pos.value - cell_24_area_neg.value + cell_24_corr - 1)^2 +
+	(cell_24_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_25_peri METHOD edge_length
+METHOD_INSTANCE cell_25_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_25_area_neg METHOD edge_torus_area
+PARAMETER cell_25_corr = 0
+QUANTITY cell_25_energy ENERGY FUNCTION
+	(cell_25_area_pos.value - cell_25_area_neg.value + cell_25_corr - 1)^2 +
+	(cell_25_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_26_peri METHOD edge_length
+METHOD_INSTANCE cell_26_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_26_area_neg METHOD edge_torus_area
+PARAMETER cell_26_corr = 0
+QUANTITY cell_26_energy ENERGY FUNCTION
+	(cell_26_area_pos.value - cell_26_area_neg.value + cell_26_corr - 1)^2 +
+	(cell_26_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_27_peri METHOD edge_length
+METHOD_INSTANCE cell_27_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_27_area_neg METHOD edge_torus_area
+PARAMETER cell_27_corr = 0
+QUANTITY cell_27_energy ENERGY FUNCTION
+	(cell_27_area_pos.value - cell_27_area_neg.value + cell_27_corr - 1)^2 +
+	(cell_27_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_28_peri METHOD edge_length
+METHOD_INSTANCE cell_28_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_28_area_neg METHOD edge_torus_area
+PARAMETER cell_28_corr = 0
+QUANTITY cell_28_energy ENERGY FUNCTION
+	(cell_28_area_pos.value - cell_28_area_neg.value + cell_28_corr - 1)^2 +
+	(cell_28_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_29_peri METHOD edge_length
+METHOD_INSTANCE cell_29_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_29_area_neg METHOD edge_torus_area
+PARAMETER cell_29_corr = 0
+QUANTITY cell_29_energy ENERGY FUNCTION
+	(cell_29_area_pos.value - cell_29_area_neg.value + cell_29_corr - 1)^2 +
+	(cell_29_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_30_peri METHOD edge_length
+METHOD_INSTANCE cell_30_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_30_area_neg METHOD edge_torus_area
+PARAMETER cell_30_corr = 0
+QUANTITY cell_30_energy ENERGY FUNCTION
+	(cell_30_area_pos.value - cell_30_area_neg.value + cell_30_corr - 1)^2 +
+	(cell_30_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_31_peri METHOD edge_length
+METHOD_INSTANCE cell_31_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_31_area_neg METHOD edge_torus_area
+PARAMETER cell_31_corr = 0
+QUANTITY cell_31_energy ENERGY FUNCTION
+	(cell_31_area_pos.value - cell_31_area_neg.value + cell_31_corr - 1)^2 +
+	(cell_31_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_32_peri METHOD edge_length
+METHOD_INSTANCE cell_32_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_32_area_neg METHOD edge_torus_area
+PARAMETER cell_32_corr = 0
+QUANTITY cell_32_energy ENERGY FUNCTION
+	(cell_32_area_pos.value - cell_32_area_neg.value + cell_32_corr - 1)^2 +
+	(cell_32_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_33_peri METHOD edge_length
+METHOD_INSTANCE cell_33_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_33_area_neg METHOD edge_torus_area
+PARAMETER cell_33_corr = 0
+QUANTITY cell_33_energy ENERGY FUNCTION
+	(cell_33_area_pos.value - cell_33_area_neg.value + cell_33_corr - 1)^2 +
+	(cell_33_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_34_peri METHOD edge_length
+METHOD_INSTANCE cell_34_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_34_area_neg METHOD edge_torus_area
+PARAMETER cell_34_corr = 0
+QUANTITY cell_34_energy ENERGY FUNCTION
+	(cell_34_area_pos.value - cell_34_area_neg.value + cell_34_corr - 1)^2 +
+	(cell_34_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_35_peri METHOD edge_length
+METHOD_INSTANCE cell_35_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_35_area_neg METHOD edge_torus_area
+PARAMETER cell_35_corr = 0
+QUANTITY cell_35_energy ENERGY FUNCTION
+	(cell_35_area_pos.value - cell_35_area_neg.value + cell_35_corr - 1)^2 +
+	(cell_35_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_36_peri METHOD edge_length
+METHOD_INSTANCE cell_36_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_36_area_neg METHOD edge_torus_area
+PARAMETER cell_36_corr = 0
+QUANTITY cell_36_energy ENERGY FUNCTION
+	(cell_36_area_pos.value - cell_36_area_neg.value + cell_36_corr - 1)^2 +
+	(cell_36_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_37_peri METHOD edge_length
+METHOD_INSTANCE cell_37_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_37_area_neg METHOD edge_torus_area
+PARAMETER cell_37_corr = 0
+QUANTITY cell_37_energy ENERGY FUNCTION
+	(cell_37_area_pos.value - cell_37_area_neg.value + cell_37_corr - 1)^2 +
+	(cell_37_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_38_peri METHOD edge_length
+METHOD_INSTANCE cell_38_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_38_area_neg METHOD edge_torus_area
+PARAMETER cell_38_corr = 0
+QUANTITY cell_38_energy ENERGY FUNCTION
+	(cell_38_area_pos.value - cell_38_area_neg.value + cell_38_corr - 1)^2 +
+	(cell_38_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_39_peri METHOD edge_length
+METHOD_INSTANCE cell_39_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_39_area_neg METHOD edge_torus_area
+PARAMETER cell_39_corr = 0
+QUANTITY cell_39_energy ENERGY FUNCTION
+	(cell_39_area_pos.value - cell_39_area_neg.value + cell_39_corr - 1)^2 +
+	(cell_39_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_40_peri METHOD edge_length
+METHOD_INSTANCE cell_40_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_40_area_neg METHOD edge_torus_area
+PARAMETER cell_40_corr = 0
+QUANTITY cell_40_energy ENERGY FUNCTION
+	(cell_40_area_pos.value - cell_40_area_neg.value + cell_40_corr - 1)^2 +
+	(cell_40_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_41_peri METHOD edge_length
+METHOD_INSTANCE cell_41_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_41_area_neg METHOD edge_torus_area
+PARAMETER cell_41_corr = 0
+QUANTITY cell_41_energy ENERGY FUNCTION
+	(cell_41_area_pos.value - cell_41_area_neg.value + cell_41_corr - 1)^2 +
+	(cell_41_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_42_peri METHOD edge_length
+METHOD_INSTANCE cell_42_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_42_area_neg METHOD edge_torus_area
+PARAMETER cell_42_corr = 0
+QUANTITY cell_42_energy ENERGY FUNCTION
+	(cell_42_area_pos.value - cell_42_area_neg.value + cell_42_corr - 1)^2 +
+	(cell_42_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_43_peri METHOD edge_length
+METHOD_INSTANCE cell_43_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_43_area_neg METHOD edge_torus_area
+PARAMETER cell_43_corr = 0
+QUANTITY cell_43_energy ENERGY FUNCTION
+	(cell_43_area_pos.value - cell_43_area_neg.value + cell_43_corr - 1)^2 +
+	(cell_43_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_44_peri METHOD edge_length
+METHOD_INSTANCE cell_44_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_44_area_neg METHOD edge_torus_area
+PARAMETER cell_44_corr = 0
+QUANTITY cell_44_energy ENERGY FUNCTION
+	(cell_44_area_pos.value - cell_44_area_neg.value + cell_44_corr - 1)^2 +
+	(cell_44_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_45_peri METHOD edge_length
+METHOD_INSTANCE cell_45_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_45_area_neg METHOD edge_torus_area
+PARAMETER cell_45_corr = 0
+QUANTITY cell_45_energy ENERGY FUNCTION
+	(cell_45_area_pos.value - cell_45_area_neg.value + cell_45_corr - 1)^2 +
+	(cell_45_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_46_peri METHOD edge_length
+METHOD_INSTANCE cell_46_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_46_area_neg METHOD edge_torus_area
+PARAMETER cell_46_corr = 0
+QUANTITY cell_46_energy ENERGY FUNCTION
+	(cell_46_area_pos.value - cell_46_area_neg.value + cell_46_corr - 1)^2 +
+	(cell_46_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_47_peri METHOD edge_length
+METHOD_INSTANCE cell_47_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_47_area_neg METHOD edge_torus_area
+PARAMETER cell_47_corr = 0
+QUANTITY cell_47_energy ENERGY FUNCTION
+	(cell_47_area_pos.value - cell_47_area_neg.value + cell_47_corr - 1)^2 +
+	(cell_47_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_48_peri METHOD edge_length
+METHOD_INSTANCE cell_48_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_48_area_neg METHOD edge_torus_area
+PARAMETER cell_48_corr = 0
+QUANTITY cell_48_energy ENERGY FUNCTION
+	(cell_48_area_pos.value - cell_48_area_neg.value + cell_48_corr - 1)^2 +
+	(cell_48_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_49_peri METHOD edge_length
+METHOD_INSTANCE cell_49_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_49_area_neg METHOD edge_torus_area
+PARAMETER cell_49_corr = 0
+QUANTITY cell_49_energy ENERGY FUNCTION
+	(cell_49_area_pos.value - cell_49_area_neg.value + cell_49_corr - 1)^2 +
+	(cell_49_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_50_peri METHOD edge_length
+METHOD_INSTANCE cell_50_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_50_area_neg METHOD edge_torus_area
+PARAMETER cell_50_corr = 0
+QUANTITY cell_50_energy ENERGY FUNCTION
+	(cell_50_area_pos.value - cell_50_area_neg.value + cell_50_corr - 1)^2 +
+	(cell_50_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_51_peri METHOD edge_length
+METHOD_INSTANCE cell_51_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_51_area_neg METHOD edge_torus_area
+PARAMETER cell_51_corr = 0
+QUANTITY cell_51_energy ENERGY FUNCTION
+	(cell_51_area_pos.value - cell_51_area_neg.value + cell_51_corr - 1)^2 +
+	(cell_51_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_52_peri METHOD edge_length
+METHOD_INSTANCE cell_52_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_52_area_neg METHOD edge_torus_area
+PARAMETER cell_52_corr = 0
+QUANTITY cell_52_energy ENERGY FUNCTION
+	(cell_52_area_pos.value - cell_52_area_neg.value + cell_52_corr - 1)^2 +
+	(cell_52_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_53_peri METHOD edge_length
+METHOD_INSTANCE cell_53_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_53_area_neg METHOD edge_torus_area
+PARAMETER cell_53_corr = 0
+QUANTITY cell_53_energy ENERGY FUNCTION
+	(cell_53_area_pos.value - cell_53_area_neg.value + cell_53_corr - 1)^2 +
+	(cell_53_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_54_peri METHOD edge_length
+METHOD_INSTANCE cell_54_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_54_area_neg METHOD edge_torus_area
+PARAMETER cell_54_corr = 0
+QUANTITY cell_54_energy ENERGY FUNCTION
+	(cell_54_area_pos.value - cell_54_area_neg.value + cell_54_corr - 1)^2 +
+	(cell_54_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_55_peri METHOD edge_length
+METHOD_INSTANCE cell_55_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_55_area_neg METHOD edge_torus_area
+PARAMETER cell_55_corr = 0
+QUANTITY cell_55_energy ENERGY FUNCTION
+	(cell_55_area_pos.value - cell_55_area_neg.value + cell_55_corr - 1)^2 +
+	(cell_55_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_56_peri METHOD edge_length
+METHOD_INSTANCE cell_56_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_56_area_neg METHOD edge_torus_area
+PARAMETER cell_56_corr = 0
+QUANTITY cell_56_energy ENERGY FUNCTION
+	(cell_56_area_pos.value - cell_56_area_neg.value + cell_56_corr - 1)^2 +
+	(cell_56_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_57_peri METHOD edge_length
+METHOD_INSTANCE cell_57_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_57_area_neg METHOD edge_torus_area
+PARAMETER cell_57_corr = 0
+QUANTITY cell_57_energy ENERGY FUNCTION
+	(cell_57_area_pos.value - cell_57_area_neg.value + cell_57_corr - 1)^2 +
+	(cell_57_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_58_peri METHOD edge_length
+METHOD_INSTANCE cell_58_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_58_area_neg METHOD edge_torus_area
+PARAMETER cell_58_corr = 0
+QUANTITY cell_58_energy ENERGY FUNCTION
+	(cell_58_area_pos.value - cell_58_area_neg.value + cell_58_corr - 1)^2 +
+	(cell_58_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_59_peri METHOD edge_length
+METHOD_INSTANCE cell_59_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_59_area_neg METHOD edge_torus_area
+PARAMETER cell_59_corr = 0
+QUANTITY cell_59_energy ENERGY FUNCTION
+	(cell_59_area_pos.value - cell_59_area_neg.value + cell_59_corr - 1)^2 +
+	(cell_59_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_60_peri METHOD edge_length
+METHOD_INSTANCE cell_60_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_60_area_neg METHOD edge_torus_area
+PARAMETER cell_60_corr = 0
+QUANTITY cell_60_energy ENERGY FUNCTION
+	(cell_60_area_pos.value - cell_60_area_neg.value + cell_60_corr - 1)^2 +
+	(cell_60_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_61_peri METHOD edge_length
+METHOD_INSTANCE cell_61_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_61_area_neg METHOD edge_torus_area
+PARAMETER cell_61_corr = 0
+QUANTITY cell_61_energy ENERGY FUNCTION
+	(cell_61_area_pos.value - cell_61_area_neg.value + cell_61_corr - 1)^2 +
+	(cell_61_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_62_peri METHOD edge_length
+METHOD_INSTANCE cell_62_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_62_area_neg METHOD edge_torus_area
+PARAMETER cell_62_corr = 0
+QUANTITY cell_62_energy ENERGY FUNCTION
+	(cell_62_area_pos.value - cell_62_area_neg.value + cell_62_corr - 1)^2 +
+	(cell_62_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_63_peri METHOD edge_length
+METHOD_INSTANCE cell_63_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_63_area_neg METHOD edge_torus_area
+PARAMETER cell_63_corr = 0
+QUANTITY cell_63_energy ENERGY FUNCTION
+	(cell_63_area_pos.value - cell_63_area_neg.value + cell_63_corr - 1)^2 +
+	(cell_63_peri.value - p0_shape_index)^2/r_peri_modulus
+
+METHOD_INSTANCE cell_64_peri METHOD edge_length
+METHOD_INSTANCE cell_64_area_pos METHOD edge_torus_area
+METHOD_INSTANCE cell_64_area_neg METHOD edge_torus_area
+PARAMETER cell_64_corr = 0
+QUANTITY cell_64_energy ENERGY FUNCTION
+	(cell_64_area_pos.value - cell_64_area_neg.value + cell_64_corr - 1)^2 +
+	(cell_64_peri.value - p0_shape_index)^2/r_peri_modulus
+
+periods
+8.000000	0.0
+0.0	8.000000
+
+vertices
+1	0.8272056850	4.6253398258
+2	1.2789062845	0.9729061357
+3	2.6681881073	4.7217896961
+4	0.5397059937	3.9944130968
+5	0.9383761755	2.6258985048
+6	6.7777626521	0.9574127137
+7	6.7455920512	1.5353490825
+8	6.6882266964	1.0190945951
+9	2.3332300350	0.3754983240
+10	4.3760131725	1.0026846060
+11	6.2013585951	2.1744469369
+12	0.4154035056	0.3415311990
+13	0.6012718982	1.0581532828
+14	3.2406031478	5.2291658305
+15	4.3121161788	4.6352467071
+16	4.0396585706	5.4194314434
+17	3.3034469332	5.3339764164
+18	2.6462584297	4.7131596253
+19	1.6583219886	4.7884572765
+20	2.4218470818	6.3701194565
+21	5.0670949125	0.4160042653
+22	3.7798583431	4.1884074527
+23	3.5395626370	3.2277159341
+24	3.8446093104	2.8592877309
+25	4.1864456710	4.4348864608
+26	4.1971033994	4.4368023708
+27	6.8249126969	2.8802775940
+28	0.5520595485	1.1425944010
+29	4.4159114843	0.9456347763
+30	4.5828164332	0.8269377993
+31	2.3637597395	0.2164617466
+32	3.5886917914	0.2158752784
+33	1.1979325681	4.9223462788
+34	0.7867663977	4.7894519269
+35	0.8663384859	4.7709547124
+36	6.4184083751	0.9293346062
+37	6.2048548851	0.7655130149
+38	5.6157967830	1.6859946360
+39	4.7069139293	0.7887190020
+40	5.0259344306	0.5442013514
+41	4.9970315336	0.2279442267
+42	2.0440807085	4.5694764106
+43	2.3432789386	4.5252062149
+44	1.3872541912	2.9558962637
+45	1.3470329592	2.7453039910
+46	1.9039234278	1.7201645539
+47	2.6925944120	0.9454291406
+48	3.0357492747	1.2928702443
+49	4.4412589181	2.4912812981
+50	4.3809220462	2.7379296418
+51	5.6530220215	1.8663836998
+52	6.0116265709	2.1934358325
+53	6.6732085734	3.1034555340
+54	0.7089701786	2.4658733520
+55	0.5050491190	1.4547505682
+56	4.1524659422	7.7062145305
+57	3.8831462148	6.6302051979
+58	4.4884209000	5.8350950587
+59	5.6558723720	6.7435166227
+60	2.4911089131	6.6906152940
+61	1.0998189125	6.3169694621
+62	3.0446055538	3.4308825656
+63	2.5071895096	4.1491694940
+64	1.8818362017	2.5892446019
+65	3.0031426799	1.4709791457
+66	2.0379222560	2.2981321311
+67	1.9541976816	2.5494572663
+68	2.0417782655	2.5782484897
+69	4.4953241665	4.0835557079
+70	4.7274278836	3.0374795197
+71	5.3798921884	3.2173981233
+72	7.4895115879	3.8952543339
+73	7.8684930001	3.6272653487
+74	7.1141222912	2.7851311435
+75	4.8771238377	4.9215210712
+76	5.1348992959	4.3388234555
+77	7.6541626350	7.4536875604
+78	7.6546466430	7.4482359949
+79	5.7549446032	7.3985597487
+80	4.5301472246	7.4027972915
+81	4.8120196686	7.0187817746
+82	4.6762243147	7.0330190256
+83	0.8063700340	6.5684947084
+84	3.4892905237	2.5474847683
+85	3.2074766656	2.0364729032
+86	2.1738475254	2.5625021447
+87	7.2105556147	1.9303262171
+88	7.2721059597	2.6897510348
+89	7.9898501599	2.8249439578
+90	7.9469259139	5.9359180932
+91	7.4226471787	3.9766506107
+92	7.5076753041	4.2243784940
+93	6.8284120369	3.8988725198
+94	7.3314310657	7.7018105885
+95	6.2520831067	7.7402129265
+96	0.4724397590	6.6505018725
+97	1.9093415675	7.7290758199
+98	0.9510597887	7.9077776924
+99	1.0838914872	7.1136698329
+100	2.3203160565	7.8209841592
+101	2.7329879202	6.8822904774
+102	3.6542884368	7.3946782287
+103	3.0991776171	6.7725138987
+104	3.2798619044	6.8106314267
+105	5.7444370784	6.5364502756
+106	5.9968194469	6.3601314000
+107	4.6498230648	5.8074630472
+108	4.9850848360	5.1093764002
+109	7.9619113413	5.8671248557
+110	7.9236629214	4.7695700166
+111	7.6016104768	5.0655241429
+112	6.7182208331	3.9941234294
+113	5.8433058024	4.6399409309
+114	5.0700706838	5.1084967664
+115	5.3112931186	5.2609825507
+116	6.4071249043	3.9422842493
+117	5.6707784391	3.2830664314
+118	5.4224757464	3.2579699943
+119	5.5277935375	4.1263687215
+120	5.6868656254	4.2892845703
+121	6.5318436619	4.7722564366
+122	5.9453558343	4.7146460702
+123	6.7075217907	4.9752018420
+124	5.8367285472	5.2442676010
+125	6.8926867683	5.3478879851
+126	6.7549746326	5.9449145712
+127	6.5649949027	6.2167633793
+128	6.1204480773	6.3000984593
+
+edges
+1	3	14	*	*	tension	0	cell_20_peri	cell_20_area_neg	cell_32_peri	cell_32_area_pos
+2	3	22	*	*	tension	0	cell_20_peri	cell_20_area_pos	cell_37_peri	cell_37_area_neg
+3	14	25	*	*	tension	0	cell_20_peri	cell_20_area_neg	cell_21_peri	cell_21_area_pos
+4	22	25	*	*	tension	0	cell_20_peri	cell_20_area_pos	cell_42_peri	cell_42_area_neg
+5	14	17	*	*	tension	0	cell_21_peri	cell_21_area_neg	cell_32_peri	cell_32_area_pos
+6	15	26	*	*	tension	0	cell_21_peri	cell_21_area_neg	cell_41_peri	cell_41_area_pos
+7	15	16	*	*	tension	0	cell_21_peri	cell_21_area_pos	cell_43_peri	cell_43_area_neg
+8	16	17	*	*	tension	0	cell_10_peri	cell_10_area_neg	cell_21_peri	cell_21_area_pos
+9	25	26	*	*	tension	0	cell_21_peri	cell_21_area_pos	cell_42_peri	cell_42_area_neg
+10	12	77	-	-	tension	0	cell_25_peri	cell_25_area_neg	cell_49_peri	cell_49_area_pos
+11	12	13	*	*	tension	0	cell_25_peri	cell_25_area_pos	cell_64_peri	cell_64_area_neg
+12	13	28	*	*	tension	0	cell_25_peri	cell_25_area_pos	cell_63_peri	cell_63_area_neg
+13	28	6	-	*	tension	0	cell_25_peri	cell_25_area_pos	cell_54_peri	cell_54_area_neg
+14	30	56	*	-	tension	0	cell_4_peri	cell_4_area_neg	cell_30_peri	cell_30_area_pos
+15	29	32	*	*	tension	0	cell_4_peri	cell_4_area_pos	cell_11_peri	cell_11_area_neg
+16	29	30	*	*	tension	0	cell_4_peri	cell_4_area_neg	cell_33_peri	cell_33_area_pos
+17	32	102	*	-	tension	0	cell_2_peri	cell_2_area_neg	cell_4_peri	cell_4_area_pos
+18	34	110	-	*	tension	0	cell_45_peri	cell_45_area_neg	cell_48_peri	cell_48_area_pos
+19	34	109	-	*	tension	0	cell_45_peri	cell_45_area_pos	cell_61_peri	cell_61_area_neg
+20	1	4	*	*	tension	0	cell_48_peri	cell_48_area_neg	cell_51_peri	cell_51_area_pos
+21	1	35	*	*	tension	0	cell_48_peri	cell_48_area_pos	cell_50_peri	cell_50_area_neg
+22	4	73	-	*	tension	0	cell_48_peri	cell_48_area_neg	cell_53_peri	cell_53_area_pos
+23	34	35	*	*	tension	0	cell_48_peri	cell_48_area_neg	cell_61_peri	cell_61_area_pos
+24	36	38	*	*	tension	0	cell_16_peri	cell_16_area_neg	cell_26_peri	cell_26_area_pos
+25	36	37	*	*	tension	0	cell_23_peri	cell_23_area_pos	cell_26_peri	cell_26_area_neg
+26	37	40	*	*	tension	0	cell_24_peri	cell_24_area_pos	cell_26_peri	cell_26_area_neg
+27	38	39	*	*	tension	0	cell_26_peri	cell_26_area_pos	cell_33_peri	cell_33_area_neg
+28	39	40	*	*	tension	0	cell_26_peri	cell_26_area_pos	cell_30_peri	cell_30_area_neg
+29	21	40	*	*	tension	0	cell_24_peri	cell_24_area_neg	cell_30_peri	cell_30_area_pos
+30	21	79	*	-	tension	0	cell_24_peri	cell_24_area_pos	cell_29_peri	cell_29_area_neg
+31	37	95	*	-	tension	0	cell_23_peri	cell_23_area_pos	cell_24_peri	cell_24_area_neg
+32	6	8	*	*	tension	0	cell_23_peri	cell_23_area_pos	cell_54_peri	cell_54_area_neg
+33	6	94	*	-	tension	0	cell_23_peri	cell_23_area_neg	cell_25_peri	cell_25_area_pos
+34	8	36	*	*	tension	0	cell_16_peri	cell_16_area_neg	cell_23_peri	cell_23_area_pos
+35	41	80	*	-	tension	0	cell_27_peri	cell_27_area_pos	cell_30_peri	cell_30_area_neg
+36	41	81	*	-	tension	0	cell_27_peri	cell_27_area_neg	cell_29_peri	cell_29_area_pos
+37	21	41	*	*	tension	0	cell_29_peri	cell_29_area_pos	cell_30_peri	cell_30_area_neg
+38	30	39	*	*	tension	0	cell_30_peri	cell_30_area_neg	cell_33_peri	cell_33_area_pos
+39	18	20	*	*	tension	0	cell_6_peri	cell_6_area_pos	cell_32_peri	cell_32_area_neg
+40	18	43	*	*	tension	0	cell_6_peri	cell_6_area_neg	cell_37_peri	cell_37_area_pos
+41	19	20	*	*	tension	0	cell_5_peri	cell_5_area_pos	cell_6_peri	cell_6_area_neg
+42	19	42	*	*	tension	0	cell_6_peri	cell_6_area_pos	cell_50_peri	cell_50_area_neg
+43	42	43	*	*	tension	0	cell_6_peri	cell_6_area_pos	cell_9_peri	cell_9_area_neg
+44	1	44	*	*	tension	0	cell_50_peri	cell_50_area_pos	cell_51_peri	cell_51_area_neg
+45	19	33	*	*	tension	0	cell_5_peri	cell_5_area_neg	cell_50_peri	cell_50_area_pos
+46	33	35	*	*	tension	0	cell_50_peri	cell_50_area_pos	cell_61_peri	cell_61_area_neg
+47	42	44	*	*	tension	0	cell_9_peri	cell_9_area_pos	cell_50_peri	cell_50_area_neg
+48	4	5	*	*	tension	0	cell_51_peri	cell_51_area_pos	cell_53_peri	cell_53_area_neg
+49	5	45	*	*	tension	0	cell_51_peri	cell_51_area_pos	cell_63_peri	cell_63_area_neg
+50	44	45	*	*	tension	0	cell_9_peri	cell_9_area_pos	cell_51_peri	cell_51_area_neg
+51	2	46	*	*	tension	0	cell_12_peri	cell_12_area_neg	cell_63_peri	cell_63_area_pos
+52	2	9	*	*	tension	0	cell_12_peri	cell_12_area_pos	cell_64_peri	cell_64_area_neg
+53	9	47	*	*	tension	0	cell_11_peri	cell_11_area_neg	cell_12_peri	cell_12_area_pos
+54	46	47	*	*	tension	0	cell_8_peri	cell_8_area_pos	cell_12_peri	cell_12_area_neg
+55	9	31	*	*	tension	0	cell_11_peri	cell_11_area_pos	cell_64_peri	cell_64_area_neg
+56	10	48	*	*	tension	0	cell_11_peri	cell_11_area_pos	cell_35_peri	cell_35_area_neg
+57	10	29	*	*	tension	0	cell_11_peri	cell_11_area_neg	cell_33_peri	cell_33_area_pos
+58	31	32	*	*	tension	0	cell_2_peri	cell_2_area_neg	cell_11_peri	cell_11_area_pos
+59	47	48	*	*	tension	0	cell_8_peri	cell_8_area_pos	cell_11_peri	cell_11_area_neg
+60	10	49	*	*	tension	0	cell_33_peri	cell_33_area_neg	cell_35_peri	cell_35_area_pos
+61	38	51	*	*	tension	0	cell_16_peri	cell_16_area_neg	cell_33_peri	cell_33_area_pos
+62	49	51	*	*	tension	0	cell_33_peri	cell_33_area_neg	cell_40_peri	cell_40_area_pos
+63	7	8	*	*	tension	0	cell_16_peri	cell_16_area_neg	cell_54_peri	cell_54_area_pos
+64	7	11	*	*	tension	0	cell_15_peri	cell_15_area_neg	cell_16_peri	cell_16_area_pos
+65	11	52	*	*	tension	0	cell_16_peri	cell_16_area_pos	cell_47_peri	cell_47_area_neg
+66	51	52	*	*	tension	0	cell_16_peri	cell_16_area_neg	cell_40_peri	cell_40_area_pos
+67	54	89	-	*	tension	0	cell_52_peri	cell_52_area_pos	cell_53_peri	cell_53_area_neg
+68	54	55	*	*	tension	0	cell_52_peri	cell_52_area_neg	cell_63_peri	cell_63_area_pos
+69	55	87	-	*	tension	0	cell_52_peri	cell_52_area_neg	cell_54_peri	cell_54_area_pos
+70	5	54	*	*	tension	0	cell_53_peri	cell_53_area_neg	cell_63_peri	cell_63_area_pos
+71	28	55	*	*	tension	0	cell_54_peri	cell_54_area_pos	cell_63_peri	cell_63_area_neg
+72	20	60	*	*	tension	0	cell_5_peri	cell_5_area_pos	cell_32_peri	cell_32_area_neg
+73	33	61	*	*	tension	0	cell_5_peri	cell_5_area_neg	cell_61_peri	cell_61_area_pos
+74	60	61	*	*	tension	0	cell_5_peri	cell_5_area_pos	cell_7_peri	cell_7_area_neg
+75	3	18	*	*	tension	0	cell_32_peri	cell_32_area_neg	cell_37_peri	cell_37_area_pos
+76	22	23	*	*	tension	0	cell_37_peri	cell_37_area_neg	cell_42_peri	cell_42_area_pos
+77	23	62	*	*	tension	0	cell_34_peri	cell_34_area_pos	cell_37_peri	cell_37_area_neg
+78	43	63	*	*	tension	0	cell_9_peri	cell_9_area_neg	cell_37_peri	cell_37_area_pos
+79	62	63	*	*	tension	0	cell_37_peri	cell_37_area_neg	cell_38_peri	cell_38_area_pos
+80	45	64	*	*	tension	0	cell_9_peri	cell_9_area_pos	cell_63_peri	cell_63_area_neg
+81	63	64	*	*	tension	0	cell_9_peri	cell_9_area_neg	cell_38_peri	cell_38_area_pos
+82	46	66	*	*	tension	0	cell_8_peri	cell_8_area_neg	cell_63_peri	cell_63_area_pos
+83	48	65	*	*	tension	0	cell_8_peri	cell_8_area_pos	cell_35_peri	cell_35_area_neg
+84	65	66	*	*	tension	0	cell_8_peri	cell_8_area_pos	cell_39_peri	cell_39_area_neg
+85	2	13	*	*	tension	0	cell_63_peri	cell_63_area_neg	cell_64_peri	cell_64_area_pos
+86	64	67	*	*	tension	0	cell_38_peri	cell_38_area_pos	cell_63_peri	cell_63_area_neg
+87	66	67	*	*	tension	0	cell_39_peri	cell_39_area_neg	cell_63_peri	cell_63_area_pos
+88	62	68	*	*	tension	0	cell_34_peri	cell_34_area_pos	cell_38_peri	cell_38_area_neg
+89	67	68	*	*	tension	0	cell_38_peri	cell_38_area_pos	cell_39_peri	cell_39_area_neg
+90	23	24	*	*	tension	0	cell_34_peri	cell_34_area_neg	cell_42_peri	cell_42_area_pos
+91	24	50	*	*	tension	0	cell_35_peri	cell_35_area_neg	cell_42_peri	cell_42_area_pos
+92	26	69	*	*	tension	0	cell_41_peri	cell_41_area_pos	cell_42_peri	cell_42_area_neg
+93	50	70	*	*	tension	0	cell_40_peri	cell_40_area_neg	cell_42_peri	cell_42_area_pos
+94	69	70	*	*	tension	0	cell_42_peri	cell_42_area_neg	cell_44_peri	cell_44_area_pos
+95	49	50	*	*	tension	0	cell_35_peri	cell_35_area_pos	cell_40_peri	cell_40_area_neg
+96	52	71	*	*	tension	0	cell_40_peri	cell_40_area_pos	cell_47_peri	cell_47_area_neg
+97	70	71	*	*	tension	0	cell_40_peri	cell_40_area_neg	cell_44_peri	cell_44_area_pos
+98	15	75	*	*	tension	0	cell_41_peri	cell_41_area_neg	cell_43_peri	cell_43_area_pos
+99	69	76	*	*	tension	0	cell_41_peri	cell_41_area_pos	cell_44_peri	cell_44_area_neg
+100	75	76	*	*	tension	0	cell_41_peri	cell_41_area_neg	cell_60_peri	cell_60_area_pos
+101	80	82	*	*	tension	0	cell_27_peri	cell_27_area_pos	cell_28_peri	cell_28_area_neg
+102	81	82	*	*	tension	0	cell_27_peri	cell_27_area_neg	cell_31_peri	cell_31_area_pos
+103	56	80	*	*	tension	0	cell_28_peri	cell_28_area_neg	cell_30_peri	cell_30_area_pos
+104	59	81	*	*	tension	0	cell_29_peri	cell_29_area_neg	cell_31_peri	cell_31_area_pos
+105	59	79	*	*	tension	0	cell_29_peri	cell_29_area_pos	cell_62_peri	cell_62_area_neg
+106	12	98	*	-	tension	0	cell_49_peri	cell_49_area_neg	cell_64_peri	cell_64_area_pos
+107	31	100	*	-	tension	0	cell_2_peri	cell_2_area_pos	cell_64_peri	cell_64_area_neg
+108	84	86	*	*	tension	0	cell_34_peri	cell_34_area_neg	cell_36_peri	cell_36_area_pos
+109	84	85	*	*	tension	0	cell_35_peri	cell_35_area_pos	cell_36_peri	cell_36_area_neg
+110	85	86	*	*	tension	0	cell_36_peri	cell_36_area_neg	cell_39_peri	cell_39_area_pos
+111	24	84	*	*	tension	0	cell_34_peri	cell_34_area_neg	cell_35_peri	cell_35_area_pos
+112	68	86	*	*	tension	0	cell_34_peri	cell_34_area_pos	cell_39_peri	cell_39_area_neg
+113	65	85	*	*	tension	0	cell_35_peri	cell_35_area_neg	cell_39_peri	cell_39_area_pos
+114	87	88	*	*	tension	0	cell_15_peri	cell_15_area_pos	cell_52_peri	cell_52_area_neg
+115	88	89	*	*	tension	0	cell_52_peri	cell_52_area_neg	cell_55_peri	cell_55_area_pos
+116	7	87	*	*	tension	0	cell_15_peri	cell_15_area_pos	cell_54_peri	cell_54_area_neg
+117	11	27	*	*	tension	0	cell_15_peri	cell_15_area_neg	cell_47_peri	cell_47_area_pos
+118	27	74	*	*	tension	0	cell_15_peri	cell_15_area_neg	cell_19_peri	cell_19_area_pos
+119	74	88	*	*	tension	0	cell_15_peri	cell_15_area_neg	cell_55_peri	cell_55_area_pos
+120	72	74	*	*	tension	0	cell_19_peri	cell_19_area_neg	cell_55_peri	cell_55_area_pos
+121	72	73	*	*	tension	0	cell_48_peri	cell_48_area_pos	cell_55_peri	cell_55_area_neg
+122	73	89	*	*	tension	0	cell_53_peri	cell_53_area_pos	cell_55_peri	cell_55_area_neg
+123	27	53	*	*	tension	0	cell_19_peri	cell_19_area_neg	cell_47_peri	cell_47_area_pos
+124	53	93	*	*	tension	0	cell_18_peri	cell_18_area_pos	cell_19_peri	cell_19_area_neg
+125	72	91	*	*	tension	0	cell_19_peri	cell_19_area_pos	cell_48_peri	cell_48_area_neg
+126	91	93	*	*	tension	0	cell_17_peri	cell_17_area_neg	cell_19_peri	cell_19_area_pos
+127	78	96	+	*	tension	0	cell_46_peri	cell_46_area_neg	cell_49_peri	cell_49_area_pos
+128	77	78	*	*	tension	0	cell_49_peri	cell_49_area_pos	cell_62_peri	cell_62_area_neg
+129	79	95	*	*	tension	0	cell_24_peri	cell_24_area_pos	cell_62_peri	cell_62_area_neg
+130	77	94	*	*	tension	0	cell_25_peri	cell_25_area_neg	cell_62_peri	cell_62_area_pos
+131	96	90	-	*	tension	0	cell_46_peri	cell_46_area_neg	cell_61_peri	cell_61_area_pos
+132	61	83	*	*	tension	0	cell_7_peri	cell_7_area_neg	cell_61_peri	cell_61_area_pos
+133	83	96	*	*	tension	0	cell_49_peri	cell_49_area_neg	cell_61_peri	cell_61_area_pos
+134	97	99	*	*	tension	0	cell_3_peri	cell_3_area_neg	cell_7_peri	cell_7_area_pos
+135	97	98	*	*	tension	0	cell_3_peri	cell_3_area_pos	cell_64_peri	cell_64_area_neg
+136	98	99	*	*	tension	0	cell_3_peri	cell_3_area_pos	cell_49_peri	cell_49_area_neg
+137	83	99	*	*	tension	0	cell_7_peri	cell_7_area_neg	cell_49_peri	cell_49_area_pos
+138	60	101	*	*	tension	0	cell_7_peri	cell_7_area_pos	cell_32_peri	cell_32_area_neg
+139	97	100	*	*	tension	0	cell_7_peri	cell_7_area_neg	cell_64_peri	cell_64_area_pos
+140	100	101	*	*	tension	0	cell_2_peri	cell_2_area_pos	cell_7_peri	cell_7_area_neg
+141	17	103	*	*	tension	0	cell_10_peri	cell_10_area_neg	cell_32_peri	cell_32_area_pos
+142	101	103	*	*	tension	0	cell_2_peri	cell_2_area_pos	cell_32_peri	cell_32_area_neg
+143	56	102	*	*	tension	0	cell_4_peri	cell_4_area_neg	cell_28_peri	cell_28_area_pos
+144	57	82	*	*	tension	0	cell_28_peri	cell_28_area_pos	cell_31_peri	cell_31_area_neg
+145	57	104	*	*	tension	0	cell_10_peri	cell_10_area_pos	cell_28_peri	cell_28_area_neg
+146	102	104	*	*	tension	0	cell_2_peri	cell_2_area_neg	cell_28_peri	cell_28_area_pos
+147	16	58	*	*	tension	0	cell_10_peri	cell_10_area_pos	cell_43_peri	cell_43_area_neg
+148	57	58	*	*	tension	0	cell_10_peri	cell_10_area_neg	cell_31_peri	cell_31_area_pos
+149	103	104	*	*	tension	0	cell_2_peri	cell_2_area_pos	cell_10_peri	cell_10_area_neg
+150	58	107	*	*	tension	0	cell_31_peri	cell_31_area_pos	cell_43_peri	cell_43_area_neg
+151	59	105	*	*	tension	0	cell_31_peri	cell_31_area_neg	cell_62_peri	cell_62_area_pos
+152	105	107	*	*	tension	0	cell_14_peri	cell_14_area_pos	cell_31_peri	cell_31_area_neg
+153	75	108	*	*	tension	0	cell_43_peri	cell_43_area_pos	cell_60_peri	cell_60_area_neg
+154	107	108	*	*	tension	0	cell_14_peri	cell_14_area_pos	cell_43_peri	cell_43_area_neg
+155	109	111	*	*	tension	0	cell_22_peri	cell_22_area_neg	cell_45_peri	cell_45_area_pos
+156	110	111	*	*	tension	0	cell_1_peri	cell_1_area_pos	cell_45_peri	cell_45_area_neg
+157	90	109	*	*	tension	0	cell_22_peri	cell_22_area_neg	cell_61_peri	cell_61_area_pos
+158	91	92	*	*	tension	0	cell_17_peri	cell_17_area_pos	cell_48_peri	cell_48_area_neg
+159	92	110	*	*	tension	0	cell_1_peri	cell_1_area_pos	cell_48_peri	cell_48_area_neg
+160	105	106	*	*	tension	0	cell_14_peri	cell_14_area_neg	cell_62_peri	cell_62_area_pos
+161	106	115	*	*	tension	0	cell_13_peri	cell_13_area_pos	cell_14_peri	cell_14_area_neg
+162	108	114	*	*	tension	0	cell_14_peri	cell_14_area_pos	cell_60_peri	cell_60_area_neg
+163	114	115	*	*	tension	0	cell_14_peri	cell_14_area_pos	cell_58_peri	cell_58_area_neg
+164	94	95	*	*	tension	0	cell_23_peri	cell_23_area_neg	cell_62_peri	cell_62_area_pos
+165	116	120	*	*	tension	0	cell_56_peri	cell_56_area_pos	cell_59_peri	cell_59_area_neg
+166	116	117	*	*	tension	0	cell_18_peri	cell_18_area_pos	cell_56_peri	cell_56_area_neg
+167	117	118	*	*	tension	0	cell_47_peri	cell_47_area_pos	cell_56_peri	cell_56_area_neg
+168	118	119	*	*	tension	0	cell_44_peri	cell_44_area_pos	cell_56_peri	cell_56_area_neg
+169	119	120	*	*	tension	0	cell_56_peri	cell_56_area_neg	cell_60_peri	cell_60_area_pos
+170	53	117	*	*	tension	0	cell_18_peri	cell_18_area_neg	cell_47_peri	cell_47_area_pos
+171	93	112	*	*	tension	0	cell_17_peri	cell_17_area_neg	cell_18_peri	cell_18_area_pos
+172	112	116	*	*	tension	0	cell_18_peri	cell_18_area_pos	cell_59_peri	cell_59_area_neg
+173	71	118	*	*	tension	0	cell_44_peri	cell_44_area_pos	cell_47_peri	cell_47_area_neg
+174	76	119	*	*	tension	0	cell_44_peri	cell_44_area_neg	cell_60_peri	cell_60_area_pos
+175	113	114	*	*	tension	0	cell_58_peri	cell_58_area_neg	cell_60_peri	cell_60_area_pos
+176	113	120	*	*	tension	0	cell_59_peri	cell_59_area_pos	cell_60_peri	cell_60_area_neg
+177	121	122	*	*	tension	0	cell_57_peri	cell_57_area_neg	cell_59_peri	cell_59_area_pos
+178	121	123	*	*	tension	0	cell_17_peri	cell_17_area_neg	cell_57_peri	cell_57_area_pos
+179	122	124	*	*	tension	0	cell_57_peri	cell_57_area_neg	cell_58_peri	cell_58_area_pos
+180	123	125	*	*	tension	0	cell_1_peri	cell_1_area_neg	cell_57_peri	cell_57_area_pos
+181	124	128	*	*	tension	0	cell_13_peri	cell_13_area_pos	cell_57_peri	cell_57_area_neg
+182	125	126	*	*	tension	0	cell_22_peri	cell_22_area_neg	cell_57_peri	cell_57_area_pos
+183	126	127	*	*	tension	0	cell_46_peri	cell_46_area_neg	cell_57_peri	cell_57_area_pos
+184	127	128	*	*	tension	0	cell_57_peri	cell_57_area_pos	cell_62_peri	cell_62_area_neg
+185	112	121	*	*	tension	0	cell_17_peri	cell_17_area_neg	cell_59_peri	cell_59_area_pos
+186	113	122	*	*	tension	0	cell_58_peri	cell_58_area_pos	cell_59_peri	cell_59_area_neg
+187	92	123	*	*	tension	0	cell_1_peri	cell_1_area_neg	cell_17_peri	cell_17_area_pos
+188	115	124	*	*	tension	0	cell_13_peri	cell_13_area_pos	cell_58_peri	cell_58_area_neg
+189	111	125	*	*	tension	0	cell_1_peri	cell_1_area_pos	cell_22_peri	cell_22_area_neg
+190	106	128	*	*	tension	0	cell_13_peri	cell_13_area_neg	cell_62_peri	cell_62_area_pos
+191	90	126	*	*	tension	0	cell_22_peri	cell_22_area_pos	cell_46_peri	cell_46_area_neg
+192	78	127	*	*	tension	0	cell_46_peri	cell_46_area_pos	cell_62_peri	cell_62_area_neg
+
+faces
+1	-187	159	156	189	-180
+2	140	142	149	-146	-17	-58	107
+3	136	-134	135
+4	-143	-14	-16	15	17
+5	74	-73	-45	41	72
+6	42	43	-40	39	-41
+7	138	-140	-139	134	-137	-132	-74
+8	54	59	83	84	-82
+9	-81	-78	-43	47	50	80
+10	-148	145	-149	-141	-8	147
+11	-59	-53	55	58	-15	-57	56
+12	52	53	-54	-51
+13	161	188	181	-190
+14	152	154	162	163	-161	-160
+15	-64	116	114	-119	-118	-117
+16	-66	-61	-24	-34	-63	64	65
+17	187	-178	-185	-171	-126	158
+18	172	166	-170	124	171
+19	-124	-123	118	-120	125	126
+20	-3	-1	2	4
+21	-6	7	8	-5	3	9
+22	191	-182	-189	-155	-157
+23	34	25	31	-164	-33	32
+24	26	-29	30	129	-31
+25	-130	-10	11	12	13	33
+26	24	27	28	-26	-25
+27	101	-102	-36	35
+28	-103	143	146	-145	144	-101
+29	-104	105	-30	37	36
+30	-37	29	-28	-38	14	103	-35
+31	-144	148	150	-152	-151	104	102
+32	5	141	-142	-138	-72	-39	-75	1
+33	-60	57	16	38	-27	61	-62
+34	-108	-111	-90	77	88	112
+35	109	-113	-83	-56	60	95	-91	111
+36	-110	-109	108
+37	-76	-2	75	40	78	-79	-77
+38	79	81	86	89	-88
+39	-89	-87	-84	113	110	-112
+40	-93	-95	62	66	96	-97
+41	-98	6	92	99	-100
+42	-9	-4	76	90	91	93	-94	-92
+43	153	-154	-150	-147	-7	98
+44	94	97	173	168	-174	-99
+45	155	-156	-18	19
+46	-131	-127	192	-183	-191
+47	170	167	-173	-96	-65	117	123
+48	-125	121	-22	-20	21	-23	18	-159	-158
+49	127	-133	137	-136	-106	10	128
+50	-42	45	46	-21	44	-47
+51	-44	20	48	49	-50
+52	-69	-68	67	-115	-114
+53	-70	-48	22	122	-67
+54	-116	63	-32	-13	71	69
+55	-122	-121	120	119	115
+56	-168	-167	-166	165	-169
+57	180	182	183	184	-181	-179	-177	178
+58	186	179	-188	-163	-175
+59	-165	-172	185	177	-186	176
+60	175	-162	-153	100	174	169	-176
+61	-19	23	-46	73	132	133	131	157
+62	-184	-192	-128	130	164	-129	-105	151	160	190
+63	-86	-80	-49	70	68	-71	-12	-85	51	82	87
+64	-107	-55	-52	85	-11	106	-135	139
+
+bodies
+1	1
+2	2
+3	3
+4	4
+5	5
+6	6
+7	7
+8	8
+9	9
+10	10
+11	11
+12	12
+13	13
+14	14
+15	15
+16	16
+17	17
+18	18
+19	19
+20	20
+21	21
+22	22
+23	23
+24	24
+25	25
+26	26
+27	27
+28	28
+29	29
+30	30
+31	31
+32	32
+33	33
+34	34
+35	35
+36	36
+37	37
+38	38
+39	39
+40	40
+41	41
+42	42
+43	43
+44	44
+45	45
+46	46
+47	47
+48	48
+49	49
+50	50
+51	51
+52	52
+53	53
+54	54
+55	55
+56	56
+57	57
+58	58
+59	59
+60	60
+61	61
+62	62
+63	63
+64	64
+
+read
+
+clipped
+conj_grad on
+autorecalc on
+// Procedures for simulation
+
+PROCEDURE t1_exchange (integer edge_number) {
+	exec sprintf "unset edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[2].id;
+	exec sprintf "unset edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[2].id;
+	exec sprintf "unset edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[2].id;
+	t1_edgeswap edge[edge_number];
+	exec sprintf "set edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "set edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[2].id;
+	if edge[edge_number].face[1].oid > 0 then {
+		exec sprintf "set edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[1].id;
+		exec sprintf "set edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[2].id;
+		} else {
+		exec sprintf "set edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[2].id;
+		exec sprintf "set edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[1].id;
+		};
+	return;
+	}
+
+PROCEDURE corner_correction () {
+	foreach face current_face do {
+		define calc_area real; // Does not work if this is local! No idea why.
+		exec sprintf
+			"calc_area := cell_%d_area_pos.value - cell_%d_area_neg.value",
+						current_face.id, current_face.id;
+		if calc_area < 0 then {
+			exec sprintf "cell_%d_corr := %d", current_face.id, facet_count; }
+		else if calc_area > facet_count then {
+			exec sprintf "cell_%d_corr := -%d", current_face.id, facet_count; }
+		else
+			exec sprintf "cell_%d_corr := 0", current_face.id;
+		};
+	return;
+	}
+
+// Relax the system allowing passive T1 transitions when edges become short.
+PROCEDURE relax_system (integer maximum_steps) {
+	local step_counter;
+	for (step_counter:=1; step_counter<=maximum_steps; step_counter++) {
+		local initial_energy;
+		initial_energy := total_energy;
+		corner_correction();
+		g1;
+		if min(edges, length) < length_threshold then {
+			local edge_counter;
+			for (edge_counter := 1; edge_counter <= edge_count;
+									edge_counter++) {
+				if edge[edge_counter].length < length_threshold /*and \
+						edge[edge_counter].length < edge_lengths[edge_counter]*/
+						then {
+					t1_exchange(edge_counter);
+					// Push the vertices appart slightly.
+					// This improves the behaviour somewhat in a liquid phase.
+					set edge[edge_counter].tension -1;
+					corner_correction();
+					g1;
+					set edge[edge_counter].tension 0;
+					//
+					printf "relaxer fliped edge %d\n", edge_counter;
+					};
+				};
+			set scale 1; // Reset scale after topological change.
+			};
+		corner_correction();
+		g1;
+		if step_counter > 10 and \
+				total_energy <= initial_energy and \
+				initial_energy - total_energy < energy_threshold then
+			return;
+		};
+	return;
+	}
+
+PROCEDURE plot_t1 (integer edge_number) {
+	set edge[edge_number] color red;
+	local number_iterations; // How much to relax between each step.
+	number_iterations := 240;
+	local number_steps; // How many steps to divide the motion into.
+	number_steps := 12;
+	local number_substeps;
+	number_substeps := 12;
+	local initial_length;
+	initial_length := edge[edge_number].length;
+	local initial_energy;
+	initial_energy := total_energy;
+	set edge[edge_number] fixed_edge;
+	local length_vs_energy;
+	define length_vs_energy real [2*number_steps + 1][2];
+	length_vs_energy[1][1] := -edge[edge_number].length;
+	length_vs_energy[1][2] := total_energy;
+	set fixed_edge target initial_length;
+	fix fixed_edge;
+	local step_number;
+	for(step_number := 1; step_number <= number_steps; step_number++) {
+		local fixed_length;
+		local substep_number;
+		for (substep_number := 1; substep_number <= number_steps;
+						substep_number++) {
+			fixed_length := maximum( 1e-9,
+						initial_length * (1 - step_number/number_steps) +
+							initial_length/number_steps *
+								(1 - substep_number/number_substeps) );
+			set fixed_edge target fixed_length;
+			corner_correction();
+			g1;
+			};
+		fixed_length := maximum( 1e-9,
+						initial_length * (1 - step_number/number_steps) );
+		set fixed_edge target fixed_length;
+		corner_correction();
+		g1;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			corner_correction();
+			g1;
+			if abs(total_energy - current_energy) <= energy_threshold then
+				break;
+			};
+		length_vs_energy[step_number + 1][1] := -edge[edge_number].length;
+		length_vs_energy[step_number + 1][2] := total_energy;
+		};
+	t1_exchange(edge_number);
+	set scale 1; // behaves better if we reset scale when changing geometry
+	for(step_number := 1; step_number <= number_steps; step_number++) {
+		local fixed_length;
+		local substep_number;
+		for (substep_number := 1; substep_number <= number_steps;
+						substep_number++) {
+			fixed_length := maximum( 1e-9,
+						initial_length * (step_number - 1)/number_steps +
+							initial_length/number_steps *
+							substep_number/number_substeps );
+			set fixed_edge target fixed_length;
+			corner_correction();
+			g1;
+			};
+		fixed_length := maximum( 1e-9,
+						initial_length * (step_number/number_steps) );
+		set fixed_edge target fixed_length;
+		corner_correction();
+		g1;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			corner_correction();
+			g1;
+			if abs(total_energy - current_energy) <= energy_threshold then
+				break;
+			};
+		length_vs_energy[step_number + number_steps + 1][1] :=
+													edge[edge_number].length;
+		length_vs_energy[step_number + number_steps + 1][2] := total_energy;
+		};
+	unfix fixed_edge;
+	unset edge[edge_number] fixed_edge;
+	printf "# Edge %d length vs energy through T1\n", edge_number | \
+			sprintf "cat > edge_%d_energy.csv", edge_number;
+	local index;
+	for (index := 1; index <= 2 * number_steps + 1; index++) {
+		printf "%.9f,%.9f\n", length_vs_energy[index][1], \
+						  length_vs_energy[index][2] | \
+			sprintf "cat >> edge_%d_energy.csv", edge_number;
+		};
+	set edge[edge_number] color black;
+	return;
+	}
+
+PROCEDURE track_t1 (integer edge_number) {
+	local number_iterations; // How much to relax between each step.
+	number_iterations := 240;
+	local number_steps; // How many steps to divide the motion into.
+	number_steps := 12;
+	local number_substeps;
+	number_substeps := 6;
+	local initial_length;
+	initial_length := edge[edge_number].length;
+	local initial_energy;
+	initial_energy := total_energy;
+	set edge[edge_number] fixed_edge;
+	set fixed_edge target initial_length;
+	fix fixed_edge;
+	local step_number;
+	for(step_number := 1; step_number <= number_steps; step_number++) {
+		local fixed_length;
+		local substep_number;
+		for (substep_number := 1; substep_number <= number_steps;
+						substep_number++) {
+			fixed_length := maximum( 1e-9,
+						initial_length * (1 - step_number/number_steps) +
+							initial_length/number_steps *
+								(1 - substep_number/number_substeps) );
+			set fixed_edge target fixed_length;
+			corner_correction();
+			g1;
+			};
+		fixed_length := maximum( 1e-9,
+						initial_length * (1 - step_number/number_steps) );
+		set fixed_edge target fixed_length;
+		local current_energy;
+		local iteration;
+		corner_correction();
+		g1;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			corner_correction();
+			g1;
+			if abs(total_energy - current_energy) <= energy_threshold then
+				break;
+		};
+		if total_energy < initial_energy then initial_energy := total_energy;
+		};
+	local peak_energy;
+	peak_energy := total_energy;
+	if initial_energy < peak_energy then {
+		t1_exchange(edge_number);
+		local fixed_length;
+		fixed_length := maximum( 1e-9,
+						initial_length/(number_steps*number_substeps) );
+		set fixed_edge target fixed_length;
+		local current_energy;
+		local iteration;
+		corner_correction();
+		g1;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			corner_correction();
+			g1;
+			if abs(total_energy - current_energy) <= energy_threshold then
+				break;
+		};
+		if total_energy < peak_energy then
+			printf "%.9f\n", total_energy - initial_energy | \
+				sprintf "cat >> r_%02.1f_p0_%1.3f_results.csv",
+						r_peri_modulus, p0_shape_index;
+		};
+	unfix fixed_edge;
+	unset edge[edge_number] fixed_edge;
+	return;
+	}
+
+PROCEDURE run_sim () {
+	relax_system(100000);
+	local initial_positions;
+	define initial_positions real[vertex_count][2];
+	foreach vertex current_vertex do {
+		initial_positions[current_vertex.id][1] := current_vertex.x;
+		initial_positions[current_vertex.id][2] := current_vertex.y;
+		};
+	local initial_wraps;
+	define initial_wraps integer[edge_count];
+	foreach edge current_edge do {
+		initial_wraps[current_edge.id] := current_edge.wrap;
+		};
+	local initial_energy;
+	initial_energy := total_energy;
+	foreach edge test_edge do {
+		set test_edge color red;
+		local number_iterations; // How much to relax between each step.
+		number_iterations := 240;
+		local number_steps; // How many steps to divide the motion into.
+		number_steps := 12;
+		local number_substeps;
+		number_substeps := 6;
+		local initial_length;
+		initial_length := test_edge.length;
+		local min_energy;
+		min_energy := total_energy;
+		set test_edge fixed_edge;
+		set fixed_edge target initial_length;
+		fix fixed_edge;
+		local step_number;
+		for(step_number := 1; step_number <= number_steps; step_number++) {
+			local fixed_length;
+			local substep_number;
+			for (substep_number := 1; substep_number <= number_steps;
+							substep_number++) {
+				fixed_length := maximum( 1e-9,
+							initial_length * (1 - step_number/number_steps) +
+								initial_length/number_steps *
+									(1 - substep_number/number_substeps) );
+				set fixed_edge target fixed_length;
+				corner_correction();
+				g1;
+				};
+			fixed_length := maximum( 1e-9,
+							initial_length * (1 - step_number/number_steps) );
+			set fixed_edge target fixed_length;
+			local current_energy;
+			local iteration;
+			corner_correction();
+			g1;
+			for (iteration := 0; iteration < number_iterations; iteration++) {
+				current_energy := total_energy;
+				corner_correction();
+				g1;
+				if abs(total_energy - current_energy) <= energy_threshold then
+					break;
+			};
+			if total_energy < min_energy then
+				min_energy := total_energy;
+			};
+		if total_energy > min_energy then {
+			printf "%.9f\n", total_energy - min_energy | \
+				sprintf "cat >> r_%02.1f_p0_%1.3f_results.csv",
+						r_peri_modulus, p0_shape_index;
+			};
+		unfix fixed_edge;
+		unset test_edge fixed_edge;
+		foreach vertex current_vertex do {
+			current_vertex.x := initial_positions[current_vertex.id][1];
+			current_vertex.y := initial_positions[current_vertex.id][2];
+			};
+		foreach edge current_edge do {
+			current_edge.wrap := initial_wraps[current_edge.id];
+			};
+		// Check things are okay.
+		corner_correction();
+		g1;
+		set test_edge color black;
+		if abs(total_energy - initial_energy) > 10 * energy_threshold then {
+			print "Error: Energy changed after edge test.";
+			return;
+			};
+		};
+	return;
+	}
+
+
+clipped
+show
+q
+
+corner_correction();
+relax_system(10000);
+J;
+0.01
+relax_system(1000);
+J;
+relax_system(10000);
+

@@ -1,0 +1,317 @@
+// Procedures for simulation
+
+PROCEDURE t1_exchange (integer edge_number) {
+	exec sprintf "unset edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[2].id;
+	exec sprintf "unset edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[2].id;
+	exec sprintf "unset edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[2].id;
+	unset edge[edge_number].vertices constraint 1;
+	t1_edgeswap edge[edge_number];
+	set edge[edge_number].vertices constraint 1;
+	exec sprintf "set edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "set edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[2].id;
+	if edge[edge_number].face[1].oid > 0 then {
+		exec sprintf "set edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[1].id;
+		exec sprintf "set edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[2].id;
+		} else {
+		exec sprintf "set edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[2].id;
+		exec sprintf "set edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[1].id;
+		};
+	return;
+	}
+
+PROCEDURE relax_system (integer maximum_steps) {
+	//local edge_lengths;
+	//define edge_lengths integer [edge_count];
+	local step_counter;
+	for (step_counter:=1; step_counter<=maximum_steps; step_counter++) {
+		local initial_energy;
+		initial_energy := total_energy;
+		/*for (edge_counter := 1; edge_counter <= edge_count; edge_counter++) {
+			edge_lengths[edge_counter] := edge[edge_counter].length;
+			};*/
+		g5;
+		if min(edges, length) < length_threshold then {
+			local edge_counter;
+			for (edge_counter := 1; edge_counter <= edge_count;
+									edge_counter++) {
+				if edge[edge_counter].length < length_threshold /*and \
+						edge[edge_counter].length < edge_lengths[edge_counter]*/
+						then {
+					t1_exchange(edge_counter);
+					// Push the vertices appart slightly.
+					// This improves the behaviour somewhat in a liquid phase.
+					set edge[edge_counter].tension -1;
+					g;
+					set edge[edge_counter].tension 0;
+					//
+					printf "relaxer fliped edge %d\n", edge_counter;
+					};
+				};
+			set scale 1;
+			};
+		g5;
+		if step_counter > 10 and \
+				total_energy <= initial_energy and \
+				initial_energy - total_energy < energy_threshold then
+			return;
+		};
+	return;
+	}
+
+PROCEDURE relax_exclusive (integer maximum_steps, integer excluded_edge) {
+	//local edge_lengths;
+	//define edge_lengths integer [edge_count];
+	local step_counter;
+	for (step_counter:=1; step_counter<=maximum_steps; step_counter++) {
+		local initial_energy;
+		initial_energy := total_energy;
+		/*for (edge_counter := 1; edge_counter <= edge_count; edge_counter++) {
+			edge_lengths[edge_counter] := edge[edge_counter].length;
+			};*/
+		g5;
+		local edge_counter;
+		for (edge_counter := 1; edge_counter <= edge_count; edge_counter++) {
+			if edge_counter != excluded_edge and \
+					edge[edge_counter].length < length_threshold /*and \
+					edge[edge_counter].length < edge_lengths[edge_counter]*/
+					then {
+				t1_exchange(edge_counter);
+				// Push the vertices appart slightly.
+				// This improves the behaviour somewhat in a liquid phase.
+				set edge[edge_counter].tension -1;
+				g;
+				set edge[edge_counter].tension 0;
+				//
+				printf "relaxer fliped edge %d\n", edge_counter;
+				};
+			};
+		g5;
+		if step_counter > 10 and \
+				total_energy <= initial_energy and \
+				initial_energy - total_energy < energy_threshold then
+			return;
+		};
+	return;
+	}
+
+// Force T1 transition using constraints
+PROCEDURE force_t1 (integer edge_number) {
+	set edge[edge_number] color red;
+	local number_iterations; // How much to relax between each step.
+	number_iterations := 64;
+	local number_steps; // How many steps to divide the motion into.
+	number_steps := 4;
+	local initial_length;
+	initial_length := edge[edge_number].length;
+	//initial_length := 2*radius*asin(edges[edge_number].length/radius/2);
+	local length_multiplier;
+	for(length_multiplier := 1;
+			length_multiplier >= 1/number_steps;
+			length_multiplier -= 1/number_steps) {
+		set scale 1; // behaves better if we reset scale when changing geometry
+		local fixed_length;
+		fixed_length := initial_length * length_multiplier + 1e-9;
+		set fixed_edge target fixed_length;
+		set edges[edge_number] fixed_edge;
+		fix fixed_edge;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			g10;
+			if total_energy - current_energy <= energy_threshold then break;
+		};
+	//	exec sprintf "g%d", 10*number_iterations;
+	//	exec sprintf "relax_exclusive(%d,%d)", number_iterations, edge_number;
+		unfix fixed_edge;
+		unset edges[edge_number] fixed_edge;
+		};
+	t1_exchange(edge_number);
+	for(length_multiplier := 1/number_steps;
+			length_multiplier <= 1;
+			length_multiplier += 1/number_steps) {
+		set scale 1; // behaves better if we reset scale when changing geometry
+		local fixed_length;
+		fixed_length := initial_length * length_multiplier + 1e-9;
+		set fixed_edge target fixed_length;
+		set edges[edge_number] fixed_edge;
+		fix fixed_edge;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			g10;
+			if total_energy - current_energy <= energy_threshold then break;
+		};
+	//	exec sprintf "g%d", 10*number_iterations;
+	//	exec sprintf "relax_exclusive(%d,%d)", number_iterations, edge_number;
+		unfix fixed_edge;
+		unset edges[edge_number] fixed_edge;
+		};
+	set edge[edge_number] color black;
+	return;
+	}
+
+PROCEDURE track_t1 (integer edge_number) {
+	// Long edges usually just pop back rather than having a well defined 
+	//  energy barrier. Not running for them saves significant computational
+	//  time and doesn't appear to affect results.
+	//if edge[edge_number].length > total_length / edge_count then return;
+	local number_iterations; // How much to relax between each step.
+	number_iterations := 24;
+	local number_steps; // How many steps to divide the motion into.
+	number_steps := 12;
+	local initial_length;
+	initial_length := edge[edge_number].length;
+	local initial_energy;
+	initial_energy := total_energy;
+	local step_number;
+	for(step_number := 1; step_number <= number_steps; step_number++) {
+		set scale 1; // behaves better if we reset scale when changing geometry
+		local fixed_length;
+		fixed_length := maximum( 1e-9,
+						initial_length * (1 - step_number/number_steps) );
+		set fixed_edge target fixed_length;
+		set edge[edge_number] fixed_edge;
+		fix fixed_edge;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			g10;
+			if total_energy - current_energy <= energy_threshold then break;
+		};
+	//	exec sprintf "g%d", 10*number_iterations;
+	//	exec sprintf "relax_exclusive(%d,%d)", number_iterations, edge_number;
+		unfix fixed_edge;
+		unset edge[edge_number] fixed_edge;
+		if total_energy < initial_energy then initial_energy := total_energy;
+		};
+	local peak_energy;
+	peak_energy := total_energy;
+	if initial_energy <= peak_energy then {
+		set scale 1; // behaves better if we reset scale when changing geometry
+		t1_exchange(edge_number);
+		local fixed_length;
+		fixed_length := maximum( 1e-9,
+							initial_length / number_steps );
+		set fixed_edge target fixed_length;
+		set edge[edge_number] fixed_edge;
+		fix fixed_edge;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			g10;
+			if total_energy - current_energy <= energy_threshold then break;
+		};
+	//	exec sprintf "g%d", 10*number_iterations;
+	//	exec sprintf "relax_exclusive(%d,%d)", number_iterations, edge_number;
+		unfix fixed_edge;
+		unset edge[edge_number] fixed_edge;
+		if total_energy <= peak_energy then {
+			printf "%.9f\n", peak_energy - initial_energy | \
+				sprintf "cat >> n_%03d_p0_%1.3f_results.csv",
+					facet_count, p0_shape_index;
+			};
+		};
+	return;
+	}
+
+PROCEDURE plot_t1 (integer edge_number) {
+	// Long edges usually just pop back rather than having a well defined 
+	//  energy barrier. Not running for them saves significant computational
+	//  time and doesn't appear to affect results.
+	//if edge[edge_number].length > total_length / edge_count then return;
+	set edge[edge_number] color red;
+	local number_iterations; // How much to relax between each step.
+	number_iterations := 24;
+	local number_steps; // How many steps to divide the motion into.
+	number_steps := 12;
+	local initial_length;
+	initial_length := edges[edge_number].length;
+	local length_vs_energy;
+	define length_vs_energy real [2*number_steps + 1][2];
+	length_vs_energy[1][1] := -edge[edge_number].length;
+	length_vs_energy[1][2] := total_energy;
+	local good_steps;
+	good_steps := 0;
+	local step_number;
+	for(step_number := 1; step_number <= number_steps; step_number++) {
+		set scale 1; // behaves better if we reset scale when changing geometry
+		local fixed_length;
+		fixed_length := maximum( 1e-9,
+						initial_length * (1 - step_number/number_steps) );
+		set fixed_edge target fixed_length;
+		set edges[edge_number] fixed_edge;
+		fix fixed_edge;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			g10;
+			if total_energy - current_energy <= energy_threshold then break;
+		};
+	//	exec sprintf "g%d", 10*number_iterations;
+	//	exec sprintf "relax_exclusive(%d,%d)", number_iterations, edge_number;
+		unfix fixed_edge;
+		unset edges[edge_number] fixed_edge;
+		length_vs_energy[step_number + 1][1] := -edge[edge_number].length;
+		length_vs_energy[step_number + 1][2] := total_energy;
+		};
+	t1_exchange(edge_number);
+	for(step_number := 1; step_number <= number_steps; step_number++) {
+		set scale 1; // behaves better if we reset scale when changing geometry
+		local fixed_length;
+		fixed_length := maximum( 1e-9,
+						initial_length * (step_number/number_steps) );
+		set fixed_edge target fixed_length;
+		set edges[edge_number] fixed_edge;
+		fix fixed_edge;
+		local current_energy;
+		local iteration;
+		for (iteration := 0; iteration < number_iterations; iteration++) {
+			current_energy := total_energy;
+			g10;
+			if total_energy - current_energy <= energy_threshold then break;
+		};
+	//	exec sprintf "g%d", 10*number_iterations;
+	//	exec sprintf "relax_exclusive(%d,%d)", number_iterations, edge_number;
+		unfix fixed_edge;
+		unset edges[edge_number] fixed_edge;
+		if total_energy < length_vs_energy[number_steps + step_number][2] then {
+			length_vs_energy[number_steps + step_number + 1][1] := \
+													edge[edge_number].length;
+			length_vs_energy[number_steps + step_number + 1][2] := total_energy;
+			good_steps++;
+			} else break;
+		};
+	if good_steps > 1 then {
+		printf "# Edge %d length vs energy through T1\n", edge_number | \
+		sprintf "cat > edge_%d_energy.csv", edge_number;
+		local index;
+		for (index := 1; index <= number_steps + good_steps + 1; index++) {
+			printf "%f,%f\n", length_vs_energy[index][1], \
+							  length_vs_energy[index][2] | \
+				sprintf "cat >> edge_%d_energy.csv", edge_number;
+			};
+		};
+	set edge[edge_number] color black;
+	return;
+	}
+
