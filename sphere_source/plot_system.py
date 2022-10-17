@@ -10,21 +10,6 @@ from pathlib import Path
 #===============================================================================
 ################################################################################
 
-# Difference with respect to periodic boundaries
-def periodic_diff (point1, point2, L = np.array([1., 1.])):
-	return ((point1 - point2 + L/2.) % L) - L/2.
-
-################################################################################
-
-def periodic_plot (point1, point2, color, box_size = 1.):
-	L = np.array([box_size, box_size])
-	point2_wrapped = point1 + periodic_diff(point2, point1, L)
-	point1_wrapped = point2 + periodic_diff(point1, point2, L)
-	plt.plot((point1_wrapped[0], point2[0]), (point1_wrapped[1], point2[1]),
-				c = color, zorder = 0)
-	plt.plot((point1[0], point2_wrapped[0]), (point1[1], point2_wrapped[1]),
-				c = color, zorder = 0)
-
 ################################################################################
 
 def plot_points(vertices):

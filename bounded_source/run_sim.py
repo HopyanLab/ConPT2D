@@ -5,7 +5,7 @@ import subprocess as sp
 import multiprocessing as mp
 from pathlib import Path
 from timer import timer
-from make_initial import make_initial
+from make_initial import *
 
 ################################################################################
 #===============================================================================
@@ -14,10 +14,11 @@ from make_initial import make_initial
 ################################################################################
 
 base_dir = Path(__file__).resolve().parent
-out_dir = base_dir.parent/'flat_output'
+out_dir = base_dir.parent/'bounded_output'
 cores_to_use = mp.cpu_count() - 4 # = 12
 number_sims = cores_to_use * 4
-number_cells = 64
+number_cells = 96
+poly_sides = 12
 #run_type = 'coarse'
 #run_type = 'medium'
 #run_type = 'fine'
@@ -30,16 +31,15 @@ if run_type == 'coarse':
 # Medium
 elif run_type == 'medium':
 	r_values = np.array([0.1, 0.5, 1., 2., 8.])
-	p0_values = np.arange(3.5, 3.91, 0.02)
+	p0_values = np.arange(3.7, 3.91, 0.02)
 # Fine
 elif run_type == 'fine':
 	r_values = np.array([0.1, 0.5, 1., 2., 8.])
 	p0_values = np.arange(3.720, 3.861, 0.002)
 else:
 	r_values = ([0.5])
-	p0_values = np.arange(3.6, 3.91, 0.01)
-#	p0_values = np.append(np.arange(3.7, 3.91, 0.01),
-#							np.array([3.2,3.4,3.6]))
+	p0_values = np.append(np.arange(3.7, 3.91, 0.01),
+							np.array([3.2,3.4,3.6]))
 
 def run_sim (run_number):
 	sim_dir = out_dir/'run_{0:02d}'.format(run_number)
@@ -50,7 +50,8 @@ def run_sim (run_number):
 		pass
 	else:
 		make_initial( N = number_cells,
-					  suevfile = sim_dir / 'initial_state.fe',
+					  polygon_sides = poly_sides,
+					  outfile = sim_dir / 'initial_state.fe',
 					  shape_index = 3.0,
 					  perimeter_modulus = 0.5 )
 	# Run through the parameter values.

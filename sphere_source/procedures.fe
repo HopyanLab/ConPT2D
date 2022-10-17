@@ -1,11 +1,5 @@
 // Procedures for simulation
 
-PROCEDURE print_area (integer face_number) {
-	exec sprintf
-	  "print cell_%d_area_pos.value - cell_%d_area_neg.value",
-								face_number, face_number;
-	}
-
 PROCEDURE dump_system (integer save_number) {
 	dump sprintf "./system_%d.fe", save_number;
 	}
@@ -14,90 +8,54 @@ PROCEDURE output_state (integer save_number) {
 	local output_file;
 	output_file := sprintf "./system_%d.txt", save_number;
 	printf "# energy\n" >>> output_file;
-	printf "%.9f\n", total_energy >> output_file;
-	printf "\n# vertices\n" >> output_file;
+	printf "%.9f", total_energy >> output_file;
+	printf "# vertices\n" >> output_file;
 	foreach vertex current_vertex do
-		printf "%d\t%.9f\t%.9f\n", current_vertex.id,
-					current_vertex.x, current_vertex.y >> output_file;
+		printf "%d\t%.9f\t%.9f\t%.9f\n", current_vertex.id,
+					current_vertex.x, current_vertex.y,
+					current_vertex.z >> output_file;
 	printf "\n# edges\n" >> output_file;
-	foreach edge current_edge do {
-		local wrap_x;
-		wrap_x := 0;
-		local wrap_y;
-		wrap_y := 0;
-		if (current_edge.wrap imod 32) == 31 then
-			wrap_x := -1
-		else if (current_edge.wrap imod 32) == 1 then
-			wrap_x := 1;
-		if ((current_edge.wrap idiv 64) imod 32) == 31 then
-			wrap_y := -1
-		else if ((current_edge.wrap idiv 64) imod 32) == 1 then
-			wrap_y := 1;
-		printf "%d\t%d\t%d\t%d\t%d\n", current_edge.id,
+	foreach edge current_edge do
+		printf "%d\t%d\t%d\n", current_edge.id,
 					current_edge.vertex[1].id,
-					current_edge.vertex[2].id,
-					wrap_x, wrap_y >> output_file;
-		};
+					current_edge.vertex[2].id >> output_file;
 	printf "\n# faces\n" >> output_file;
 	foreach face current_face do {
 		printf "%d", current_face.id >> output_file;
 		foreach current_face.edge current_edge do
 			printf "\t%d", current_edge.oid >> output_file;
-	printf "\n# centroids\n" >> output_file;
-	foreach face current_face do
-		printf "%d\t%.9f\t%.9f\n", current_face.id,
-								avg(current_face.vertices, x),
-								avg(current_face.vertices, y) >> output_file;
-	}
-
-PROCEDURE unset_edge_methods (integer edge_number) {
-	foreach edge[edge_number].face current_face do {
-		exec sprintf "unset edge[%d] cell_%d_peri",
-							edge_number, current_face.id;
-		exec sprintf "unset edge[%d] cell_%d_area_pos",
-							edge_number, current_face.id;
-		exec sprintf "unset edge[%d] cell_%d_area_neg",
-							edge_number, current_face.id;
-		};
-	}
-
-PROCEDURE set_edge_methods (integer edge_number) {
-	foreach edge[edge_number].face current_face do {
-		exec sprintf "set edge[%d] cell_%d_peri",
-								edge_number, current_face.id;
-		local face_index;
-		if edge[edge_number].face[1].id == current_face.id then
-			face_index := 1 else face_index := 2;
-		if (edge[edge_number].face[face_index].oid > 0) then {
-			exec sprintf "set edge[%d] cell_%d_area_pos",
-								edge_number, current_face.id;
-			}
-		else {
-			exec sprintf "set edge[%d] cell_%d_area_neg",
-								edge_number, current_face.id;
-			}
-		};
 	}
 
 PROCEDURE t1_exchange (integer edge_number) {
-	unset_edge_methods(edge_number);
+	exec sprintf "unset edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "unset edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[2].id;
+	exec sprintf "unset edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[2].id;
+	exec sprintf "unset edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[2].id;
+	unset edge[edge_number].vertices constraint 1;
 	t1_edgeswap edge[edge_number];
-	set_edge_methods(edge_number);
-	return;
-	}
-
-PROCEDURE corner_correction () {
-	foreach face current_face do {
-		define calc_area real; // Does not work if this is local! No idea why.
-		exec sprintf
-			"calc_area := cell_%d_area_pos.value - cell_%d_area_neg.value",
-						current_face.id, current_face.id;
-		if calc_area < 0 then {
-			exec sprintf "cell_%d_corr := %d", current_face.id, facet_count; }
-		else if calc_area > facet_count then {
-			exec sprintf "cell_%d_corr := -%d", current_face.id, facet_count; }
-		else
-			exec sprintf "cell_%d_corr := 0", current_face.id;
+	set edge[edge_number].vertices constraint 1;
+	exec sprintf "set edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[1].id;
+	exec sprintf "set edge[%d] cell_%d_peri",
+									edge_number, edge[edge_number].face[2].id;
+	if edge[edge_number].face[1].oid > 0 then {
+		exec sprintf "set edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[1].id;
+		exec sprintf "set edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[2].id;
+		} else {
+		exec sprintf "set edge[%d] cell_%d_area_pos",
+									edge_number, edge[edge_number].face[2].id;
+		exec sprintf "set edge[%d] cell_%d_area_neg",
+									edge_number, edge[edge_number].face[1].id;
 		};
 	return;
 	}
@@ -114,10 +72,8 @@ PROCEDURE relax_system (integer maximum_steps) {
 		for (edge_counter:=1; edge_counter<=edge_count; edge_counter++) {
 			flipped_edges[edge_counter] := 0;
 			};
-		corner_correction();
 		g1;
 		if min(edges, length) < length_threshold then {
-			local edge_counter;
 			for (edge_counter := 1; edge_counter <= edge_count;
 									edge_counter++) {
 				if edge[edge_counter].length < length_threshold then {
@@ -126,6 +82,7 @@ PROCEDURE relax_system (integer maximum_steps) {
 					printf "relaxer fliped edge %d\n", edge_counter;
 					};
 				};
+			set scale 1; // Reset scale after topological change.
 			};
 		// Push the vertices appart slightly.
 		// This improves the behaviour somewhat in a liquid phase.
@@ -134,18 +91,16 @@ PROCEDURE relax_system (integer maximum_steps) {
 				set edge[edge_counter].tension -1;
 				};
 			};
-		corner_correction();
-		g2;
+		g1;
 		for (edge_counter:=1; edge_counter<=edge_count; edge_counter++) {
 			if flipped_edges[edge_counter] == 1 then {
 				set edge[edge_counter].tension 0;
 				};
 			};
-		corner_correction();
-		g2;
+		g1;
 		if step_counter > 10 and \
-		   total_energy <= initial_energy and \
-		   initial_energy - total_energy < energy_threshold then
+				total_energy <= initial_energy and \
+				initial_energy - total_energy < energy_threshold then
 			return;
 		};
 	return;
@@ -181,19 +136,16 @@ PROCEDURE plot_t1 (integer edge_number) {
 							initial_length/number_steps *
 								(1 - substep_number/number_substeps) );
 			set fixed_edge target fixed_length;
-			corner_correction();
 			g1;
 			};
 		fixed_length := maximum( length_tolerance,
 						initial_length * (1 - step_number/number_steps) );
 		set fixed_edge target fixed_length;
-		corner_correction();
 		g1;
 		local current_energy;
 		local iteration;
 		for (iteration := 0; iteration < number_iterations; iteration++) {
 			current_energy := total_energy;
-			corner_correction();
 			g1;
 			if abs(total_energy - current_energy) <= energy_threshold then
 				break;
@@ -213,19 +165,16 @@ PROCEDURE plot_t1 (integer edge_number) {
 							initial_length/number_steps *
 							substep_number/number_substeps );
 			set fixed_edge target fixed_length;
-			corner_correction();
 			g1;
 			};
 		fixed_length := maximum( length_tolerance,
 						initial_length * (step_number/number_steps) );
 		set fixed_edge target fixed_length;
-		corner_correction();
 		g1;
 		local current_energy;
 		local iteration;
 		for (iteration := 0; iteration < number_iterations; iteration++) {
 			current_energy := total_energy;
-			corner_correction();
 			g1;
 			if abs(total_energy - current_energy) <= energy_threshold then
 				break;
@@ -273,7 +222,6 @@ PROCEDURE track_t1 (integer edge_number) {
 							initial_length/number_steps *
 								(1 - substep_number/number_substeps) );
 			set fixed_edge target fixed_length;
-			corner_correction();
 			g1;
 			};
 		fixed_length := maximum( length_tolerance,
@@ -281,11 +229,9 @@ PROCEDURE track_t1 (integer edge_number) {
 		set fixed_edge target fixed_length;
 		local current_energy;
 		local iteration;
-		corner_correction();
 		g1;
 		for (iteration := 0; iteration < number_iterations; iteration++) {
 			current_energy := total_energy;
-			corner_correction();
 			g1;
 			if abs(total_energy - current_energy) <= energy_threshold then
 				break;
@@ -302,11 +248,9 @@ PROCEDURE track_t1 (integer edge_number) {
 		set fixed_edge target fixed_length;
 		local current_energy;
 		local iteration;
-		corner_correction();
 		g1;
 		for (iteration := 0; iteration < number_iterations; iteration++) {
 			current_energy := total_energy;
-			corner_correction();
 			g1;
 			if abs(total_energy - current_energy) <= energy_threshold then
 				break;
@@ -323,19 +267,24 @@ PROCEDURE track_t1 (integer edge_number) {
 
 PROCEDURE run_sim () {
 	local initial_positions;
-	define initial_positions real[vertex_count][2];
+	define initial_positions real[vertex_count][3];
 	foreach vertex current_vertex do {
 		initial_positions[current_vertex.id][1] := current_vertex.x;
 		initial_positions[current_vertex.id][2] := current_vertex.y;
-		};
-	local initial_wraps;
-	define initial_wraps integer[edge_count];
-	foreach edge current_edge do {
-		initial_wraps[current_edge.id] := current_edge.wrap;
+		initial_positions[current_vertex.id][3] := current_vertex.z;
 		};
 	local initial_energy;
 	initial_energy := total_energy;
+	local edge_counter;
+	edge_counter := 0;
 	foreach edge test_edge do {
+		// When the system gets big we don't need to do every edge.
+		// A sample of the edges should be fine.
+		if edge_counter < 192 then
+			edge_counter++
+		else
+			return;
+		initial_energy := total_energy;
 		local number_iterations; // How much to relax between each step.
 		number_iterations := 240;
 		local number_steps; // How many steps to divide the motion into.
@@ -360,7 +309,6 @@ PROCEDURE run_sim () {
 								initial_length/number_steps *
 									(1 - substep_number/number_substeps) );
 				set fixed_edge target fixed_length;
-				corner_correction();
 				g1;
 				};
 			fixed_length := maximum( length_tolerance,
@@ -368,11 +316,9 @@ PROCEDURE run_sim () {
 			set fixed_edge target fixed_length;
 			local current_energy;
 			local iteration;
-			corner_correction();
 			g1;
 			for (iteration := 0; iteration < number_iterations; iteration++) {
 				current_energy := total_energy;
-				corner_correction();
 				g1;
 				if abs(total_energy - current_energy) <= energy_threshold then
 					break;
@@ -382,20 +328,17 @@ PROCEDURE run_sim () {
 			};
 		if total_energy > min_energy then {
 			printf "%.9f\n", total_energy - min_energy | \
-				sprintf "cat >> r_%2.1f_p0_%1.3f_results.csv",
-						r_peri_modulus, p0_shape_index;
+				sprintf "cat >> n_%d_p0_%1.3f_results.csv",
+						facet_count, p0_shape_index;
 			};
 		unfix fixed_edge;
 		unset test_edge fixed_edge;
 		foreach vertex current_vertex do {
 			current_vertex.x := initial_positions[current_vertex.id][1];
 			current_vertex.y := initial_positions[current_vertex.id][2];
-			};
-		foreach edge current_edge do {
-			current_edge.wrap := initial_wraps[current_edge.id];
+			current_vertex.z := initial_positions[current_vertex.id][3];
 			};
 		// Check things are okay.
-		corner_correction();
 		g1;
 		if abs(total_energy - initial_energy) > 10 * energy_threshold then {
 			print "Error: Energy changed after edge test.";
@@ -404,4 +347,3 @@ PROCEDURE run_sim () {
 		};
 	return;
 	}
-

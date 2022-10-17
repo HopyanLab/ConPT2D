@@ -4,7 +4,6 @@ import os
 import subprocess
 import glob
 from pathlib import Path
-import argparse
 
 ################################################################################
 #===============================================================================
@@ -12,7 +11,7 @@ import argparse
 #===============================================================================
 ################################################################################
 
-def combine_runs (out_dir = Path('../flat_output') ):
+def combine_runs (out_dir = Path('../bounded_output') ):
 #	for run_dir in out_dir.glob('quick_test'):
 	for run_dir in out_dir.glob('run_[0-9]*'):
 		if not run_dir.is_dir():
@@ -31,7 +30,7 @@ def combine_runs (out_dir = Path('../flat_output') ):
 
 ################################################################################
 
-def compile_stats (out_dir = Path('../flat_output') ):
+def compile_stats (out_dir = Path('../bounded_output') ):
 	data = np.zeros((0,4), dtype = float)
 	for csvfile in out_dir.glob('r_[0-9]*.[0-9]*_p0_[0-9]*.[0-9]*.csv'):
 		r_param = float(str(csvfile.stem).split('_')[-3])
@@ -48,16 +47,8 @@ def compile_stats (out_dir = Path('../flat_output') ):
 ################################################################################
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(
-							description = '')
-	parser.add_argument('datadir',
-						nargs = '?',
-						default = '../flat_output',
-						type = str,
-						help = 'directory of simulation output data')
-	args = parser.parse_args()
-	combine_runs(out_dir = Path(args.datadir))
-	compile_stats(out_dir = Path(args.datadir))
+	combine_runs()
+	compile_stats()
 
 ################################################################################
 # EOF

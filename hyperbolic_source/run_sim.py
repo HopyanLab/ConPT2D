@@ -5,7 +5,7 @@ import subprocess as sp
 import multiprocessing as mp
 from pathlib import Path
 from timer import timer
-from make_initial import make_initial
+from make_initial import *
 
 ################################################################################
 #===============================================================================
@@ -14,56 +14,55 @@ from make_initial import make_initial
 ################################################################################
 
 base_dir = Path(__file__).resolve().parent
-out_dir = base_dir.parent/'flat_output'
+out_dir = base_dir.parent/'hyperbolic_output'
 cores_to_use = mp.cpu_count() - 4 # = 12
 number_sims = cores_to_use * 4
-number_cells = 64
+r_param = 0.5
+number_cells = 128
+polygon_number = 12
+area_values = np.array([2.0,1.0,0.5,0.25,0.125])*np.pi
 #run_type = 'coarse'
-#run_type = 'medium'
+run_type = 'medium'
 #run_type = 'fine'
-run_type = 'none'
 
 # Coarse
 if run_type == 'coarse':
-	r_values = np.array([0.5, 1., 2., 8.])
-	p0_values = np.arange(3.0, 4.01, 0.1)
+	p0_values = np.arange(3.8, 4.01, 0.1)
 # Medium
 elif run_type == 'medium':
-	r_values = np.array([0.1, 0.5, 1., 2., 8.])
-	p0_values = np.arange(3.5, 3.91, 0.02)
+	p0_values = np.arange(3.80, 4.01, 0.02)
 # Fine
 elif run_type == 'fine':
-	r_values = np.array([0.1, 0.5, 1., 2., 8.])
-	p0_values = np.arange(3.720, 3.861, 0.002)
+	p0_values = np.arange(3.800, 4.001, 0.002)
 else:
-	r_values = ([0.5])
-	p0_values = np.arange(3.6, 3.91, 0.01)
-#	p0_values = np.append(np.arange(3.7, 3.91, 0.01),
-#							np.array([3.2,3.4,3.6]))
+	p0_values = np.arange(3.0, 4.01, 0.1)
+
+p0_values = np.array([3.2,3.4,3.6])
 
 def run_sim (run_number):
 	sim_dir = out_dir/'run_{0:02d}'.format(run_number)
 	Path.mkdir(sim_dir, exist_ok = True)
 	os.chdir(str(sim_dir))
-	# Generate an initial state.
-	if (sim_dir/'initial_state.fe').exists():
-		pass
-	else:
-		make_initial( N = number_cells,
-					  suevfile = sim_dir / 'initial_state.fe',
-					  shape_index = 3.0,
-					  perimeter_modulus = 0.5 )
 	# Run through the parameter values.
-	for r_param in r_values:
+	for area_param in area_values:
+		# Generate an initial state.
+		if (sim_dir/('initial_state_{0:1.2f}.fe'.format(area_param))).exists():
+			pass
+		else:
+			make_initial(N = number_cells,
+						 polygon_sides = polygon_number,
+						 outfile = sim_dir / ('initial_state_' + \
+									'{0:1.2f}.fe'.format(area_param)),
+						 polygon_area = area_param,
+						 shape_index = 3.6,
+						 perimeter_modulus = 0.5)
 		for p0_param in p0_values:
-			if (sim_dir/('relaxed_state_r_{0:1.1f}'.format(r_param) + \
+			if (sim_dir/('relaxed_state_area_{0:1.2f}'.format(area_param) + \
 						'_p0_{0:1.3f}.fe'.format(p0_param))).exists():
 				continue
 			else:
 				# Make a simulation script.
 				with open(sim_dir/'sim.fe','w') as sim_script:
-					sim_script.write('r_peri_modulus := {0:1.3f};\n'.format(
-																	r_param))
 					sim_script.write('p0_shape_index := {0:1.3f};\n'.format(
 																	p0_param))
 					sim_script.write('relax_system(1000);\n')
@@ -71,12 +70,13 @@ def run_sim (run_number):
 					sim_script.write('relax_system(10000);\n')
 					sim_script.write('run_sim();\n')
 					sim_script.write('dump "relaxed_state')
-					sim_script.write('_r_{0:1.1f}'.format(r_param))
+					sim_script.write('_area_{0:1.2f}'.format(area_param))
 					sim_script.write('_p0_{0:1.3f}'.format(p0_param))
 					sim_script.write('.fe";\n')
 					sim_script.write('quit 1\n')
 				# Run simulation.
-				sim = sp.Popen(['evolver','-fsim.fe','-x','initial_state.fe'])
+				sim = sp.Popen(['evolver', '-fsim.fe', '-x',
+							'initial_state_{0:1.2f}.fe'.format(area_param)])
 				sim.wait()
 				(sim_dir / 'sim.fe').unlink()
 

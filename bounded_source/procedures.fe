@@ -1,0 +1,264 @@
+// Procedures for bounded planar vertex model
+
+PROCEDURE print_area (integer cell_number) {
+	exec sprintf "print cell_%d_area_pos.value - cell_%d_area_neg.value",
+					cell_number, cell_number;
+	}
+
+PROCEDURE dump_system (integer save_number) {
+	dump sprintf "./system_%d.fe", save_number;
+	}
+
+PROCEDURE output_data (integer save_number) {
+	local output_file;
+	output_file := sprintf "./system_%d.txt", save_number;
+	printf "# vertices\n" >>> output_file;
+	foreach vertex current_vertex do
+		printf "%d\t%.9f\t%.9f\n", current_vertex.id,
+					current_vertex.x, current_vertex.y >> output_file;
+	printf "\n# edges\n" >> output_file;
+	foreach edge current_edge do
+		printf "%d\t%d\t%d\n", current_edge.id,
+					current_edge.vertex[1].id,
+					current_edge.vertex[2].id >> output_file;
+	printf "\n# faces\n" >> output_file;
+	foreach face current_face do {
+		printf "%d", current_face.id >> output_file;
+		foreach current_face.edge current_edge do
+			printf "\t%d", current_edge.oid >> output_file;
+		printf "\t%d\n", current_face.type >> output_file;
+		}
+	}
+
+PROCEDURE fix_face_type (integer face_number) {
+	if face[face_number].type != -1 then {
+		set face[face_number].type 1; // Normal cell
+		foreach face[face_number].edge current_edge do {
+			foreach current_edge.facet current_face do {
+				if current_face.type == -1 then {
+					set face[face_number].type 0; // Cell on boundary
+					};
+				};
+			};
+		};
+	return;
+	}
+
+PROCEDURE setup_types () {
+	foreach facet current_face do {
+		if current_face.id <= high_constraint then {
+			set current_face.type -1; // Boundary space for T1s
+			}
+		else {
+			set current_face.type 1; // Normal cell
+			};
+		};
+	foreach facet current_face do {
+		fix_face_type(current_face.id);
+		};
+	return;
+	}
+
+PROCEDURE unset_edge_methods (integer edge_number) {
+	foreach edge[edge_number].face current_face do {
+		exec sprintf "unset edge[%d] cell_%d_peri",
+							edge_number, current_face.id;
+		exec sprintf "unset edge[%d] cell_%d_area_pos",
+							edge_number, current_face.id;
+		exec sprintf "unset edge[%d] cell_%d_area_neg",
+							edge_number, current_face.id;
+		};
+	}
+
+PROCEDURE set_edge_methods (integer edge_number) {
+	foreach edge[edge_number].face current_face do {
+		exec sprintf "set edge[%d] cell_%d_peri",
+								edge_number, current_face.id;
+		local face_index;
+		if edge[edge_number].face[1].id == current_face.id then
+			face_index := 1 else face_index := 2;
+		if (edge[edge_number].face[face_index].oid > 0) then {
+			exec sprintf "set edge[%d] cell_%d_area_pos",
+								edge_number, current_face.id;
+			}
+		else {
+			exec sprintf "set edge[%d] cell_%d_area_neg",
+								edge_number, current_face.id;
+			}
+		};
+	}
+
+PROCEDURE t1_exchange (integer edge_number) {
+	if edge_number <= 2*high_constraint then
+		return;
+	// v_constraint_list is structured as
+	//  {#_constraints some_constraint some_other_constraint ...}
+	foreach edge[edge_number].vertex current_vertex do {
+		local const_index;
+		for (const_index := v_constraint_list[1]+1; const_index >= 2;
+					const_index--) {
+			local const_number;
+			const_number := current_vertex.v_constraint_list[const_index];
+			//													imod 0x100000;
+			unset current_vertex constraint const_number;
+	//		print const_number;
+			};
+	//	print current_vertex.v_constraint_list;
+		};
+	unset_edge_methods(edge_number);
+	t1_edgeswap edge[edge_number];
+	set_edge_methods(edge_number);
+	foreach edge[edge_number].vertex current_vertex do
+		foreach current_vertex.face current_face do
+			if current_face.type == -1 then
+				set current_vertex constraint current_face.id;
+	foreach edge[edge_number].facet current_face do {
+		fix_face_type(current_face.id);
+		};
+//	foreach edge[edge_number].facet current_face do {
+//		fix_face_color(current_face.id);
+//		};
+	return;
+	}
+
+// Relax the system allowing passive T1 transitions when edges become short.
+PROCEDURE relax_system (integer maximum_steps) {
+	local flipped_edges;
+	define flipped_edges integer[edge_count];
+	local step_counter;
+	for (step_counter:=1; step_counter<=maximum_steps; step_counter++) {
+		local initial_energy;
+		initial_energy := total_energy;
+		local edge_counter;
+		for (edge_counter:=1; edge_counter<=edge_count; edge_counter++) {
+			flipped_edges[edge_counter] := 0;
+			};
+		g1;
+		if min(edges, length) < length_threshold then {
+			local edge_counter;
+			for (edge_counter := 2*high_constraint + 1;
+							edge_counter <= edge_count;
+									edge_counter++) {
+				if (edge[edge_counter].length < length_threshold*1e-2) || \
+				   (edge[edge_counter].length < length_threshold && \
+						(edge[edge_counter].face[1].type != -1 && \
+						 edge[edge_counter].face[2].type != -1)) then {
+					t1_exchange(edge_counter);
+					flipped_edges[edge_counter]:=1;
+					printf "relaxer fliped edge %d\n", edge_counter;
+					};
+				};
+			};
+		// Push the vertices appart slightly.
+		// This improves the behaviour somewhat in a liquid phase.
+		for (edge_counter:=1; edge_counter<=edge_count; edge_counter++) {
+			if flipped_edges[edge_counter] == 1 then {
+				set edge[edge_counter].tension -1;
+				};
+			};
+		g1;
+		for (edge_counter:=1; edge_counter<=edge_count; edge_counter++) {
+			if flipped_edges[edge_counter] == 1 then {
+				set edge[edge_counter].tension 0;
+				};
+			};
+		g1;
+		if step_counter > 10 and \
+		   total_energy <= initial_energy and \
+		   initial_energy - total_energy < energy_threshold then
+			return;
+		};
+	return;
+	}
+
+PROCEDURE run_sim () {
+	local initial_positions;
+	define initial_positions real[vertex_count][2];
+	foreach vertex current_vertex do {
+		initial_positions[current_vertex.id][1] := current_vertex.x;
+		initial_positions[current_vertex.id][2] := current_vertex.y;
+		};
+	local initial_wraps;
+	define initial_wraps integer[edge_count];
+	foreach edge current_edge do {
+		initial_wraps[current_edge.id] := current_edge.wrap;
+		};
+	local initial_energy;
+	initial_energy := total_energy;
+	foreach edge test_edge do {
+		local should_skip; // Check if edge too close to boundary.
+		should_skip := 0;
+		foreach test_edge.vertices check_vertex do
+			foreach check_vertex.facets check_face do
+				if (check_face.type == 0 || check_face.type == -1) then
+					should_skip := 1;
+		if should_skip == 1 then
+			continue;
+		set test_edge.color red;
+		local number_iterations; // How much to relax between each step.
+		number_iterations := 240;
+		local number_steps; // How many steps to divide the motion into.
+		number_steps := 12;
+		local number_substeps;
+		number_substeps := 6;
+		local initial_length;
+		initial_length := test_edge.length;
+		local min_energy;
+		min_energy := total_energy;
+		set test_edge fixed_edge;
+		set fixed_edge target initial_length;
+		fix fixed_edge;
+		local step_number;
+		for(step_number := 1; step_number <= number_steps; step_number++) {
+			local fixed_length;
+			local substep_number;
+			for (substep_number := 1; substep_number < number_substeps;
+							substep_number++) {
+				fixed_length := maximum( length_tolerance,
+							initial_length * (1 - step_number/number_steps) +
+								initial_length/number_steps *
+									(1 - substep_number/number_substeps) );
+				set fixed_edge target fixed_length;
+				g1;
+				};
+			fixed_length := maximum( length_tolerance,
+							initial_length * (1 - step_number/number_steps) );
+			set fixed_edge target fixed_length;
+			local current_energy;
+			local iteration;
+			g1;
+			for (iteration := 0; iteration < number_iterations; iteration++) {
+				current_energy := total_energy;
+				g1;
+				if abs(total_energy - current_energy) <= energy_threshold then
+					break;
+			};
+			if total_energy < min_energy then
+				min_energy := total_energy;
+			};
+		if total_energy > min_energy then {
+			printf "%.9f\n", total_energy - min_energy | \
+				sprintf "cat >> r_%2.1f_p0_%1.3f_results.csv",
+						r_peri_modulus, p0_shape_index;
+			};
+		unfix fixed_edge;
+		unset test_edge fixed_edge;
+		foreach vertex current_vertex do {
+			current_vertex.x := initial_positions[current_vertex.id][1];
+			current_vertex.y := initial_positions[current_vertex.id][2];
+			};
+		foreach edge current_edge do {
+			current_edge.wrap := initial_wraps[current_edge.id];
+			};
+		// Check things are okay.
+		g1;
+		set test_edge.color black;
+		if abs(total_energy - initial_energy) > 10 * energy_threshold then {
+			print "Error: Energy changed after edge test.";
+			return;
+			};
+		};
+	return;
+	}
+
+setup_types();
