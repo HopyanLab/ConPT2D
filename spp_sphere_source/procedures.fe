@@ -1,0 +1,547 @@
+// Procedures for simulation
+
+face_area := 0;
+
+// Function to generate gaussian random variable. Uses Box-Muller Transform.
+FUNCTION real gaussian_random (real mean, real std) {
+	local uni_1;
+	uni_1 := random; // random uniform between 0 and 1.
+	local uni_2;
+	uni_2 := random;
+	local gauss_1;
+	gauss_1 := sqrt(-2*log(uni_1))*sin(2*pi*uni_2);
+	return (mean + std*gauss_1);
+	}
+
+/*// Function to generate gaussian random variable using central limit theorem.
+FUNCTION real gaussian_random (real mean, real std) {
+	local num_samples;
+	num_samples := 4;
+	local running_sum;
+	running_sum := 0.0;
+	local counter;
+	for (counter := 0; counter<num_samples; counter++)
+		running_sum += (random - 0.5);
+	local gauss;
+	gauss := 2*running_sum*sqrt(3/num_samples);
+	return (mean + std*gauss);
+	} //*/
+
+FUNCTION real R_x (real theta, real u_x, real u_y, real u_z,
+								real v_x, real v_y, real v_z) {
+	return (cos(theta) + u_x^2 * (1 - cos(theta))) * v_x +
+		(u_x * u_y * (1 - cos(theta)) - u_z * sin(theta)) * v_y +
+		(u_x * u_z * (1 - cos(theta)) + u_y * sin(theta)) * v_z
+	}
+
+FUNCTION real R_y (real theta, real u_x, real u_y, real u_z,
+								real v_x, real v_y, real v_z) {
+	return (cos(theta) + u_y^2 * (1 - cos(theta))) * v_y +
+		(u_y * u_z * (1 - cos(theta)) + u_x * sin(theta)) * v_z +
+		(u_y * u_x * (1 - cos(theta)) + u_z * sin(theta)) * v_x
+	}
+
+FUNCTION real R_z (real theta, real u_x, real u_y, real u_z,
+								real v_x, real v_y, real v_z) {
+	return (cos(theta) + u_z^2 * (1 - cos(theta))) * v_z +
+		(u_z * u_x * (1 - cos(theta)) + u_y * sin(theta)) * v_x +
+		(u_z * u_y * (1 - cos(theta)) + u_x * sin(theta)) * v_y
+	}
+
+PROCEDURE dump_system (integer save_number) {
+	dump sprintf "./system_%d.fe", save_number;
+	}
+
+PROCEDURE output_state (integer save_number) {
+	local output_file;
+	output_file := sprintf "./system_%d.txt", save_number;
+	printf "# energy\n" >>> output_file;
+	printf "%.9f\n", total_energy >> output_file;
+	printf "# vertices\n" >> output_file;
+	foreach vertex current_vertex do
+		printf "%d\t%.9f\t%.9f\t%.9f\n", current_vertex.id,
+					current_vertex.x, current_vertex.y,
+					current_vertex.z >> output_file;
+	printf "\n# edges\n" >> output_file;
+	foreach edge current_edge do
+		printf "%d\t%d\t%d\n", current_edge.id,
+					current_edge.vertex[1].id,
+					current_edge.vertex[2].id >> output_file;
+	printf "\n# faces\n" >> output_file;
+	foreach face current_face do {
+		printf "%d", current_face.id >> output_file;
+		foreach current_face.edge current_edge do
+			printf "\t%d", current_edge.oid >> output_file;
+		printf "\n" >> output_file;
+		};
+	printf "\n# centres\n" >> output_file;
+	foreach face current_face do {
+		printf "%d", current_face.id >> output_file;
+		printf "\t%.9f", current_face.normal_x >> output_file;
+		printf "\t%.9f", current_face.normal_y >> output_file;
+		printf "\t%.9f\n", current_face.normal_z >> output_file;
+		};
+	printf "\n# directions\n" >> output_file;
+	foreach face current_face do {
+		printf "%d", current_face.id >> output_file;
+		printf "\t%.9f", current_face.direction_x >> output_file;
+		printf "\t%.9f", current_face.direction_y >> output_file;
+		printf "\t%.9f\n", current_face.direction_z >> output_file;
+		};
+	}
+
+PROCEDURE unset_edge_methods (integer edge_number) {
+	foreach edge[edge_number].face current_face do {
+		exec sprintf "unset edge[%d] cell_%d_peri",
+							edge_number, current_face.id;
+		exec sprintf "unset edge[%d] cell_%d_area_pos_n",
+							edge_number, current_face.id;
+		exec sprintf "unset edge[%d] cell_%d_area_neg_n",
+							edge_number, current_face.id;
+		exec sprintf "unset edge[%d] cell_%d_area_pos_s",
+							edge_number, current_face.id;
+		exec sprintf "unset edge[%d] cell_%d_area_neg_s",
+							edge_number, current_face.id;
+		};
+	}
+
+PROCEDURE set_edge_methods (integer edge_number) {
+	foreach edge[edge_number].face current_face do {
+		exec sprintf "set edge[%d] cell_%d_peri",
+								edge_number, current_face.id;
+		local face_index;
+		if edge[edge_number].face[1].id == current_face.id then
+			face_index := 1 else face_index := 2;
+		if current_face.use_north > 0 then {
+			if (edge[edge_number].face[face_index].oid > 0) then {
+				exec sprintf "set edge[%d] cell_%d_area_pos_n",
+									edge_number, current_face.id;
+				}
+			else {
+				exec sprintf "set edge[%d] cell_%d_area_neg_n",
+									edge_number, current_face.id;
+				};
+			}
+		else {
+			if (edge[edge_number].face[face_index].oid > 0) then {
+				exec sprintf "set edge[%d] cell_%d_area_pos_s",
+									edge_number, current_face.id;
+				}
+			else {
+				exec sprintf "set edge[%d] cell_%d_area_neg_s",
+									edge_number, current_face.id;
+				};
+			};
+		};
+		recalc;
+	}
+
+PROCEDURE t1_exchange (integer edge_number) {
+	unset_edge_methods(edge_number);
+	unset edge[edge_number].vertices constraint 1;
+	t1_edgeswap edge[edge_number];
+	set edge[edge_number].vertices constraint 1;
+	set_edge_methods(edge_number);
+	return;
+	}
+
+PROCEDURE fix_edge_methods () {
+	foreach face current_face do {
+		if (current_face.normal_z > 0.8 and
+							current_face.use_north == 0) then {
+			current_face.use_north := 1;
+			foreach current_face.edge current_edge do {
+				unset_edge_methods(current_edge.id);
+				set_edge_methods(current_edge.id);
+				};
+			}
+		else if (current_face.normal_z < -0.8 and
+							current_face.use_north == 1) then {
+			current_face.use_north := 0;
+			foreach current_face.edge current_edge do {
+				unset_edge_methods(current_edge.id);
+				set_edge_methods(current_edge.id);
+				};
+			};
+		};
+	}
+
+PROCEDURE fix_total_rotation () {
+	local angle;
+	local vector_x; local vector_y; local vector_z;
+	vector_x := 0;
+	vector_y := 0;
+	vector_z := 0;
+	local norm;
+	local moment;
+	moment := 0;
+//	local face_area;
+	local cos_length;
+	local n_x; local n_y; local n_z;
+	foreach face current_face do {
+		exec sprintf "face_area := cell_%d_area.value", current_face.id;
+		vector_x := vector_x + face_area * (
+						current_face.last_normal_y * current_face.normal_z -
+						current_face.last_normal_z * current_face.normal_y );
+		vector_y := vector_y + face_area * (
+						current_face.last_normal_z * current_face.normal_x -
+						current_face.last_normal_x * current_face.normal_z);
+		vector_z := vector_z + face_area * (
+						current_face.last_normal_x * current_face.normal_y -
+						current_face.last_normal_y * current_face.normal_x);
+		};
+	print vector_x;
+	vector_x := vector_x / (4*pi*radius^2);
+	vector_y := vector_y / (4*pi*radius^2);
+	vector_z := vector_z / (4*pi*radius^2);
+	norm := sqrt(vector_x^2 + vector_y^2 + vector_z^2);
+	// norm = MoI * sin(theta)
+	vector_x := vector_x / norm;
+	vector_y := vector_y / norm;
+	vector_z := vector_z / norm;
+	foreach face current_face do {
+		exec sprintf "face_area := cell_%d_area.value", current_face.id;
+		cos_length := vector_x * current_face.normal_x +
+					  vector_y * current_face.normal_y +
+					  vector_z * current_face.normal_z;
+		moment := moment + face_area * (1 - cos_length^2);
+		};
+	moment := moment / (4*pi*radius^2);
+	angle := asin(norm / moment);
+	// now undo rotation
+	foreach face current_face do {
+		n_x := current_face.normal_x;
+		n_y := current_face.normal_y;
+		n_z := current_face.normal_z;
+		current_face.normal_x := R_x (-angle,
+							vector_x, vector_y, vector_z,
+							n_x, n_y, n_z);
+		current_face.normal_y := R_y (-angle,
+							vector_x, vector_y, vector_z,
+							n_x, n_y, n_z);
+		current_face.normal_z := R_z (-angle,
+							vector_x, vector_y, vector_z,
+							n_x, n_y, n_z);
+		};
+	foreach vertex current_vertex do {
+		n_x := current_vertex.x;
+		n_y := current_vertex.y;
+		n_z := current_vertex.z;
+		unset current_vertex constraint 1;
+		current_vertex.x := R_x (-angle,
+							vector_x, vector_y, vector_z,
+							n_x, n_y, n_z);
+		current_vertex.y := R_y (-angle,
+							vector_x, vector_y, vector_z,
+							n_x, n_y, n_z);
+		current_vertex.z := R_z (-angle,
+							vector_x, vector_y, vector_z,
+							n_x, n_y, n_z);
+		set current_vertex constraint 1;
+		};
+	}
+
+PROCEDURE update_face_normals () {
+	local edge_x; local edge_y; local edge_z;
+	local perp_x; local perp_y; local perp_z;
+	local v_x; local v_y; local v_z;
+	local centroid_x; local centroid_y; local centroid_z;
+	local norm;
+	foreach face current_face do {
+		current_face.last_normal_x := current_face.normal_x;
+		current_face.last_normal_y := current_face.normal_y;
+		current_face.last_normal_z := current_face.normal_z;
+		current_face.normal_x := 0;
+		current_face.normal_y := 0;
+		current_face.normal_z := 0;
+		// find centroid (should be near centre)
+		centroid_x := 0;
+		centroid_y := 0;
+		centroid_z := 0;
+		foreach current_face.vertex current_vertex do {
+			centroid_x := centroid_x + current_vertex.x;
+			centroid_y := centroid_y + current_vertex.y;
+			centroid_z := centroid_z + current_vertex.z;
+			};
+		norm := sqrt(centroid_x^2 + centroid_y^2 + centroid_z^2);
+		centroid_x := centroid_x / norm;
+		centroid_y := centroid_y / norm;
+		centroid_z := centroid_z / norm;
+		// find direction to centre of cell
+		foreach current_face.edge current_edge do {
+			v_x := current_edge.vertices[1].x;
+			v_y := current_edge.vertices[1].y;
+			v_z := current_edge.vertices[1].z;
+			edge_x := current_edge.vertices[2].x - v_x;
+			edge_y := current_edge.vertices[2].y - v_y;
+			edge_z := current_edge.vertices[2].z - v_z;
+			perp_x := v_y * edge_z - v_z * edge_y;
+			perp_y := v_z * edge_x - v_x * edge_z;
+			perp_z := v_x * edge_y - v_y * edge_x;
+			norm := sqrt(perp_x^2 + perp_y^2 + perp_z^2);
+			perp_x := perp_x / norm;
+			perp_y := perp_y / norm;
+			perp_z := perp_z / norm;
+			current_face.normal_x := current_face.normal_x + 
+						perp_x * current_edge.length;
+			current_face.normal_y := current_face.normal_y + 
+						perp_y * current_edge.length;
+			current_face.normal_z := current_face.normal_z + 
+						perp_z * current_edge.length;
+			};
+		norm := sqrt(current_face.normal_x^2 +
+					 current_face.normal_y^2 +
+					 current_face.normal_z^2);
+		current_face.normal_x := current_face.normal_x / norm;
+		current_face.normal_y := current_face.normal_y / norm;
+		current_face.normal_z := current_face.normal_z / norm;
+		};
+	}
+
+PROCEDURE update_face_directions () {
+	// angle to rotate by
+	local angle;
+	local a_x; local a_y; local a_z;
+	// vector to rotate
+	local d_x; local d_y; local d_z;
+	foreach face current_face do {
+		d_x := current_face.direction_x;
+		d_y := current_face.direction_y;
+		d_z := current_face.direction_z;
+		a_x := current_face.last_normal_y * current_face.normal_z -
+				current_face.last_normal_z * current_face.normal_y;
+		a_y := current_face.last_normal_z * current_face.normal_x -
+				current_face.last_normal_x * current_face.normal_z;
+		a_z := current_face.last_normal_x * current_face.normal_y -
+				current_face.last_normal_y * current_face.normal_x;
+		angle := sqrt(a_x^2 + a_y^2 + a_z^2);
+		a_x := a_x / angle; a_y := a_y / angle; a_z := a_z / angle;
+		current_face.direction_x := R_x (angle, a_x, a_y, a_z, d_x, d_y, d_z);
+		current_face.direction_y := R_y (angle, a_x, a_y, a_z, d_x, d_y, d_z);
+		current_face.direction_z := R_z (angle, a_x, a_y, a_z, d_x, d_y, d_z);
+		};
+	}
+
+PROCEDURE normalise_face_directions () {
+	local norm;
+	foreach face current_face do {
+		// make direction vector perpendicular to location vector
+		norm := (current_face.normal_x * current_face.direction_x) +
+				(current_face.normal_y * current_face.direction_y) +
+				(current_face.normal_z * current_face.direction_z);
+		if norm > 1e-12 then {
+			current_face.direction_x := current_face.direction_x -
+												current_face.normal_x * norm;
+			current_face.direction_y := current_face.direction_y -
+												current_face.normal_y * norm;
+			current_face.direction_z := current_face.direction_z -
+												current_face.normal_z * norm;
+			};
+		norm := sqrt(current_face.direction_x^2 +
+					 current_face.direction_y^2 +
+					 current_face.direction_z^2);
+		current_face.direction_x := current_face.direction_x / norm;
+		current_face.direction_y := current_face.direction_y / norm;
+		current_face.direction_z := current_face.direction_z / norm;
+		};
+	}
+
+PROCEDURE move_vertices () {
+	// angle to rotate by
+	local angle;
+	local a_x; local a_y; local a_z;
+	// vertex unit vector
+	local norm;
+	local v_x; local v_y; local v_z;
+	foreach vertex current_vertex do {
+		current_vertex.motion_x := 0;
+		current_vertex.motion_y := 0;
+		current_vertex.motion_z := 0;
+		v_x := current_vertex.x / radius;
+		v_y := current_vertex.y / radius;
+		v_z := current_vertex.z / radius;
+		foreach current_vertex.face current_face do {
+			a_x := current_face.normal_y * v_z -
+					current_face.normal_z * v_y;
+			a_y := current_face.normal_z * v_x -
+					current_face.normal_x * v_z;
+			a_x := current_face.normal_y * v_z -
+					current_face.normal_z * v_y;
+			angle := sqrt(a_x^2 + a_y^2 + a_z^2);
+			a_x := a_x / angle; a_y := a_y / angle; a_z := a_z / angle;
+			current_vertex.motion_x := current_vertex.motion_x +
+					R_x(angle, a_x, a_y, a_z, current_face.direction_x,
+						current_face.direction_y, current_face.direction_z);
+			current_vertex.motion_y := current_vertex.motion_y +
+					R_y(angle, a_x, a_y, a_z, current_face.direction_x,
+						current_face.direction_y, current_face.direction_z);
+			current_vertex.motion_z := current_vertex.motion_z +
+					R_z(angle, a_x, a_y, a_z, current_face.direction_x,
+						current_face.direction_y, current_face.direction_z);
+			};
+		current_vertex.motion_x := current_vertex.motion_x * v_0 * dt;
+		current_vertex.motion_y := current_vertex.motion_y * v_0 * dt;
+		current_vertex.motion_z := current_vertex.motion_z * v_0 * dt;
+		angle := sqrt(current_vertex.motion_x^2 +
+					  current_vertex.motion_y^2 +
+					  current_vertex.motion_z^2);
+		a_x := (v_y * current_vertex.motion_z - 
+				v_z * current_vertex.motion_y) / angle;
+		a_y := (v_z * current_vertex.motion_x - 
+				v_x * current_vertex.motion_z) / angle;
+		a_z := (v_x * current_vertex.motion_y - 
+				v_y * current_vertex.motion_x) / angle;
+		unset current_vertex constraint 1;
+		current_vertex.x := R_x(angle, a_x, a_y, a_z, v_x, v_y, v_z) * radius;
+		current_vertex.y := R_y(angle, a_x, a_y, a_z, v_x, v_y, v_z) * radius;
+		current_vertex.z := R_z(angle, a_x, a_y, a_z, v_x, v_y, v_z) * radius;
+		set current_vertex constraint 1;
+		};
+	}
+
+PROCEDURE setup_random_directions () {
+	local random_phi;
+	local random_theta;
+	foreach face current_face do {
+		random_phi := 2*pi*random;
+		random_theta := acos(2*(random-0.5));
+		current_face.direction_x := sin(random_theta) * cos(random_phi);
+		current_face.direction_y := sin(random_theta) * sin(random_phi);
+		current_face.direction_z := cos(random_theta);
+		// want random vector from tangent space, so need to normalise.
+		};
+	update_face_normals();
+	normalise_face_directions();
+	}
+
+PROCEDURE rotate_faces () {
+	local eta;
+	local theta;
+	local old_d_x;
+	local old_d_y;
+	local old_d_z;
+	local new_d_x;
+	local new_d_y;
+	local new_d_z;
+	local check_norm;
+	foreach face current_face do {
+		eta := gaussian_random(0, 2*D_r);
+		theta := eta * dt;
+		old_d_x := current_face.direction_x;
+		old_d_y := current_face.direction_y;
+		old_d_z := current_face.direction_z;
+		new_d_x := R_x(theta, current_face.normal_x, current_face.normal_y,
+						current_face.normal_z, old_d_x, old_d_y, old_d_z);
+		new_d_y := R_y(theta, current_face.normal_x, current_face.normal_y,
+						current_face.normal_z, old_d_x, old_d_y, old_d_z);
+		new_d_z := R_z(theta, current_face.normal_x, current_face.normal_y,
+						current_face.normal_z, old_d_x, old_d_y, old_d_z);
+		current_face.direction_x := new_d_x;
+		current_face.direction_y := new_d_y;
+		current_face.direction_z := new_d_z;
+		};
+	normalise_face_directions();
+	}
+
+PROCEDURE time_step () {
+	g1;
+	recalc;
+	update_face_normals();
+	update_face_directions();
+	rotate_faces();
+	move_vertices();
+	fix_total_rotation();
+	if min(edges, length) < length_threshold then {
+		local edge_counter;
+		for (edge_counter := 1; edge_counter <= edge_count;
+								edge_counter++) {
+			if edge[edge_counter].length < length_threshold then {
+				t1_exchange(edge_counter);
+				printf "relaxer fliped edge %d\n", edge_counter;
+				};
+			};
+		};
+	fix_edge_methods();
+	recalc;
+	// undo any total rotations
+//	local initial_positions;
+//	define initial_positions real[vertex_count][3];
+//	foreach vertex current_vertex do {
+//		initial_positions[current_vertex.id][1] := current_vertex.x;
+//		initial_positions[current_vertex.id][2] := current_vertex.y;
+//		initial_positions[current_vertex.id][3] := current_vertex.z;
+//		};
+	}
+
+PROCEDURE run_sim (integer maximum_steps) {
+	// set fixed timestep
+	conj_grad off;
+	optimize off;
+	scale := dt;
+	//
+	if track_positions != 0 then
+		output_state(0);
+	local save_index;
+	save_index := 1;
+	setup_random_directions();
+	local step_counter;
+	for (step_counter:=1; step_counter<=maximum_steps; step_counter++) {
+		time_step();
+		if track_positions != 0 then
+			if step_counter == save_nums[save_index] then {
+				output_state(step_counter);
+				save_index := save_index + 1;
+				print save_index;
+			};
+		};
+	// reset normal evolution
+	optimize on;
+	conj_grad on;
+	}
+
+// Relax the system allowing passive T1 transitions when edges become short.
+PROCEDURE relax_system (integer maximum_steps) {
+	local step_counter;
+	for (edge_counter:=1; edge_counter<=edge_count; edge_counter++) {
+		edge[edge_counter].flipped := 0; 
+		};
+	for (step_counter:=1; step_counter<=maximum_steps; step_counter++) {
+		local initial_energy;
+		initial_energy := total_energy;
+		local edge_counter;
+		update_face_normals();
+		g1;
+		if min(edges, length) < length_threshold then {
+			local edge_counter;
+			for (edge_counter := 1; edge_counter <= edge_count;
+									edge_counter++) {
+				if edge[edge_counter].length < length_threshold and \
+				   edge[edge_counter].flipped == 0 then {
+					t1_exchange(edge_counter);
+					edge[edge_counter].flipped := 2;
+					printf "relaxer fliped edge %d\n", edge_counter;
+					};
+				};
+				set scale 1;
+			};
+		// Push the vertices appart slightly.
+		// This improves the behaviour somewhat in a liquid phase.
+		for (edge_counter:=1; edge_counter<=edge_count; edge_counter++) {
+			if edge[edge_counter].flipped == 2 then {
+				set edge[edge_counter].tension -1;
+				edge[edge_counter].flipped := 1;
+				} else
+			if edge[edge_counter].flipped == 1 then {
+				set edge[edge_counter].tension 0;
+				edge[edge_counter].flipped := 0;
+				};
+			};
+		if step_counter > 10 and \
+		   total_energy <= initial_energy and \
+		   initial_energy - total_energy < energy_threshold and \
+		   max(edges, flipped) == 0 then
+			return;
+		};
+	return;
+	}
+
