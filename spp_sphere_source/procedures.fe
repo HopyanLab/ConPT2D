@@ -463,14 +463,6 @@ PROCEDURE time_step () {
 		};
 	fix_edge_methods();
 	recalc;
-	// undo any total rotations
-//	local initial_positions;
-//	define initial_positions real[vertex_count][3];
-//	foreach vertex current_vertex do {
-//		initial_positions[current_vertex.id][1] := current_vertex.x;
-//		initial_positions[current_vertex.id][2] := current_vertex.y;
-//		initial_positions[current_vertex.id][3] := current_vertex.z;
-//		};
 	}
 
 PROCEDURE run_sim (integer maximum_steps) {
