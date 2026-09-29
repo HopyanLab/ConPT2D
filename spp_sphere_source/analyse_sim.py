@@ -42,7 +42,6 @@ def rot2d (v,angle):
 ################################################################################
 
 def assemble_positions (out_dir, run_values, n_values, p0_values, time_values):
-	run_values = np.delete(run_values, 5)
 	data = np.zeros(0, dtype = object)
 	for n_index, n_value in enumerate(n_values):
 		temp_data = np.zeros((len(run_values),
@@ -132,7 +131,13 @@ def assemble_msd (data, run_values, n_values, p0_values, time_values):
 						 3), dtype = float)
 		disp = temp_data - temp_data[: ,: ,: , 0, np.newaxis, :]
 		scalar_disp = np.linalg.norm(disp , axis=-1)
-		length_square = (scalar_disp*2)**2
+	######################################################################
+	# I believe this is what I used in the paper. It is incorrect.
+	#	length_square = (scalar_disp*2)**2
+	######################################################################
+	# This is what I should have used.
+		length_square = (np.arcsin(scalar_disp/2)*2)**2
+	######################################################################
 		msd = np.mean(length_square, axis = (0,2)) # average over runs and faces
 		full_msd[n_index] = msd
 	return full_msd
